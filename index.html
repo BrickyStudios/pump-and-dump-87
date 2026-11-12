@@ -151,6 +151,20 @@ button { cursor: pointer; touch-action: manipulation; }
 .warn #s-play .heat-bar { box-shadow: 0 0 0 2px var(--color-accent); }
 .warn-line { color: var(--color-warn-on-desk); font-size: var(--text-sm); }
 
+/* day clock and tutorial */
+.daybar { position: absolute; left: 0; right: 0; top: 0; height: 5px; background: var(--tint-track); z-index: 2; }
+.daybar i { position: absolute; inset: 0; background: var(--color-ink-2); transform-origin: left; transform: scaleX(0); }
+.daybar.late i { background: var(--color-accent); }
+.bell { position: absolute; right: 72px; top: var(--space-md); display: grid; justify-items: end; color: var(--color-accent-deep); pointer-events: none; z-index: 3; }
+.bell b { font-family: var(--font-display); font-size: clamp(3rem, 7vw, 5rem); line-height: 1; }
+.bell span { font-size: var(--text-sm); }
+.tip { position: absolute; left: var(--space-lg); bottom: 96px; width: min(calc(100% - 2 * var(--space-lg)), 520px); z-index: 25; background: var(--color-paper-2); color: var(--color-ink); border: 3px solid var(--color-ink); border-radius: var(--radius); padding: var(--space-md); display: grid; gap: var(--space-sm); box-shadow: 0 18px 40px var(--shadow-pad-c); }
+.tip p { font-family: var(--font-outlier); font-size: var(--text-lg); line-height: 1.25; color: var(--color-ink-2); }
+.tip-actions { display: flex; gap: var(--space-sm); align-items: center; flex-wrap: wrap; }
+.spot { outline: 4px solid var(--color-accent); outline-offset: 3px; animation: spot 1s ease-in-out infinite alternate; position: relative; z-index: 4; }
+.board .spot { outline-offset: -4px; }
+@keyframes spot { from { outline-color: var(--color-accent); } to { outline-color: var(--color-paper-2); } }
+
 /* effects */
 .fx { position: absolute; pointer-events: none; z-index: 5; }
 .stamp { font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 5vw, 3.6rem); color: var(--color-accent); border: 5px solid var(--color-accent); padding: 0 var(--space-sm); border-radius: 8px; transform: rotate(-9deg); opacity: 0.9; animation: stamp-in 180ms var(--ease-out) both; text-transform: uppercase; }
@@ -217,6 +231,8 @@ button { cursor: pointer; touch-action: manipulation; }
   .hold { min-width: 0; width: 100%; }
   #dumpBtn { min-width: 0; }
   #s-results { grid-template-columns: minmax(0, 1fr); gap: var(--space-md); }
+  .tip { left: var(--space-xs); right: var(--space-xs); width: auto; top: 64px; bottom: auto; }
+  .bell { right: 60px; top: var(--space-xs); }
   #paper { height: auto; width: 100%; }
   .title-pad { padding: var(--space-lg) var(--space-md) var(--space-md) var(--space-xl); }
 }
@@ -258,6 +274,7 @@ button { cursor: pointer; touch-action: manipulation; }
       <div class="title-foot">
         <button class="linkish" id="langBtn" type="button" data-t="otherLang"></button>
         <button class="linkish" id="muteBtnT" type="button"></button>
+        <button class="linkish" id="howtoBtn" type="button" data-t="howto"></button>
       </div>
     </div>
   </section>
@@ -273,7 +290,8 @@ button { cursor: pointer; touch-action: manipulation; }
       <button class="icon-btn" id="pauseBtn" type="button" data-t="pause"></button>
     </header>
     <div class="board pad" id="board">
-      <div class="chart-wrap"><canvas id="chart"></canvas><span class="bag"><span id="hBag"></span> <b class="combo" id="hCombo"></b></span></div>
+      <div class="daybar" aria-hidden="true"><i id="dayFill"></i></div>
+      <div class="chart-wrap"><canvas id="chart"></canvas><div class="bell" id="bell" hidden><b id="bellN"></b><span data-t="bellLeft"></span></div><span class="bag"><span id="hBag"></span> <b class="combo" id="hCombo"></b></span></div>
       <div class="call">
         <div class="caller" id="caller">
           <canvas id="face" width="296" height="296" aria-hidden="true"></canvas>
@@ -299,6 +317,7 @@ button { cursor: pointer; touch-action: manipulation; }
       <button class="btn hold" id="shredBtn" type="button"><span class="fill" id="shredFill"></span><span data-t="shred"></span><small data-t="shredHint"></small></button>
       <button class="btn btn-primary hold" id="dumpBtn" type="button"><span class="fill" id="dumpFill"></span><span data-t="dump"></span><small data-t="dumpHint"></small></button>
     </div>
+    <div class="tip" id="tip" role="dialog" aria-live="polite" hidden><p id="tipText"></p><div class="tip-actions"><button class="btn btn-primary" id="tipNext" type="button" data-t="tipNext"></button><button class="linkish" id="tipOff" type="button" data-t="tipOff"></button></div></div>
     <div class="overlay" id="pauseOv" hidden><div><h2 data-t="paused"></h2><p data-t="resume"></p><p><button class="btn btn-primary" id="resumeBtn" type="button" data-t="resumeBtn"></button></p></div></div>
     <div class="overlay" id="endOv" hidden><h2 id="endText"></h2></div>
   </section>
@@ -389,6 +408,13 @@ const S = {
     shareHead: "Pump & Dump '87, Tag {n}", shareFree: "Pump & Dump '87, freies Spiel", shareEnd: { dump: 'DUMP', raid: 'RAZZIA', halt: 'AUSGESETZT' },
     shareLies: 'Gelogen: {n}-mal', figNames: { greedy: 'Gierig', cautious: 'Vorsichtig', narc: 'Ermittler', whale: 'Wal', mom: 'Mama' },
     defaultName: 'Anonym',
+    howto: "So geht's", tipNext: 'Verstanden', tipOff: 'Tipps aus', bellLeft: 'bis zur Glocke', bellSoon: 'Noch 30 Sekunden bis zur Schlussglocke',
+    tipCall: 'Ein Kunde ruft an. Oben steht, wer er ist und was er fragt. Daran erkennst du, was ihn überzeugt.',
+    tipReplies: 'Wähl eine Antwort mit 1, 2, 3 oder per Tippen. Gelogen treibt den Kurs am stärksten, füllt aber die SEC-Leiste. Ehrlich ist sicher und bringt wenig. Vorsichtige Leute legen bei Lügen auf.',
+    tipClose: 'Verkauft. Der Kurs steigt, und dein Paket ist mehr wert. Dein Ziel: den Kurs hochtreiben und dann alles verkaufen.',
+    tipHeat: 'Die SEC wird aufmerksam. Bei 100 % gibt es eine Razzia, und du verlierst alles. Halte S oder Schreddern, um die Leiste zu senken. Jeder Sack dauert länger.',
+    tipNarc: 'Vorsicht: Wer nach Namen, Unterlagen, Adresse oder Konto fragt, ist ein Ermittler. Den nicht anlügen. Ehrlich senkt die Leiste sogar.',
+    tipDump: 'Ist der Kurs hoch genug, halte D oder Dumpen. Du kassierst nur, was du vor der Schlussglocke um 16:00 verkaufst. Danach ist die Aktie wertlos.',
   },
   en: {
     tagline: 'Phone a worthless stock to the moon. Sell before the SEC calls.',
@@ -425,6 +451,13 @@ const S = {
     shareHead: "Pump & Dump '87, day {n}", shareFree: "Pump & Dump '87, free play", shareEnd: { dump: 'DUMPED', raid: 'RAIDED', halt: 'HALTED' },
     shareLies: 'Lies told: {n}', figNames: { greedy: 'Greedy', cautious: 'Cautious', narc: 'Investigator', whale: 'Whale', mom: 'Mom' },
     defaultName: 'Anonymous',
+    howto: 'How to play', tipNext: 'Got it', tipOff: 'No more tips', bellLeft: 'to the bell', bellSoon: '30 seconds to the closing bell',
+    tipCall: 'A client is calling. The top tells you who they are and what they ask. That is how you know what wins them over.',
+    tipReplies: 'Pick a reply with 1, 2, 3 or a tap. A lie pushes the price furthest but fills the SEC bar. Honest is safe and earns little. Careful callers hang up on lies.',
+    tipClose: 'Sold. The price goes up and your bag is worth more. Your goal: pump the price, then sell everything.',
+    tipHeat: 'The SEC is paying attention. At 100 % you get raided and lose everything. Hold S or Shred to bring the bar down. Every bag takes longer.',
+    tipNarc: 'Careful: anyone asking for names, paperwork, an address or an account is an investigator. Do not lie to him. Honest even lowers the bar.',
+    tipDump: 'When the price is high enough, hold D or Dump. You only cash what you sell before the closing bell at 16:00. After that the stock is worthless.',
   },
 };
 function T(key, v = {}) {
@@ -539,6 +572,90 @@ const MOM_REPLIES = {
   lie: ['Kauf 1.000 Stück, Mama. Für die Rente.', 'Buy a thousand shares, Mom. For your retirement.'],
 };
 
+// more lines, so two days rarely sound alike
+LINES.greedy.push(
+  ['Ich hab drei Kreditkarten. Reicht das?', "I've got three credit cards. Is that enough?"],
+  ['Mein Horoskop sagt: heute Aktien.', 'My horoscope says stocks today.'],
+  ['Wie viele Lamborghinis sind das in Prozent?', 'How many Lamborghinis is that in percent?'],
+  ['Ich will vor meinem Nachbarn reich sein. Der hat einen Pool.', 'I want to be rich before my neighbor. He has a pool.'],
+  ['Ich hab das Haushaltsgeld hier. Schnell, bevor sie heimkommt.', "I've got the grocery money. Quick, before she gets home."],
+  ['Was kaufen die Profis gerade? Genau das will ich.', "What are the pros buying? That's what I want."],
+  ['Gestern im Casino verloren. Heute hol ich es zurück.', 'Lost it at the casino last night. Winning it back today.'],
+  ['Können Sie mir das bis Weihnachten verzehnfachen?', 'Can you make it ten times by Christmas?'],
+);
+LINES.cautious.push(
+  ['Ich telefoniere nicht gern mit Fremden. Wer sind Sie nochmal?', "I don't like talking to strangers. Who are you again?"],
+  ['Mein Arzt sagt, ich soll mich nicht aufregen.', "My doctor says I shouldn't get excited."],
+  ['Können Sie das langsamer erklären? Ich hab meine Brille nicht.', "Can you explain slower? I don't have my glasses."],
+  ['Ich hab nur Sparbriefe. Ist das sowas?', 'I only have savings bonds. Is this like that?'],
+  ['Die Bank hat mir davon abgeraten. Glaube ich.', 'The bank told me not to. I think.'],
+  ['Ich kaufe nur, was ich anfassen kann.', 'I only buy things I can touch.'],
+  ['Die Firma steht nicht im Telefonbuch. Ich hab nachgesehen.', "The company isn't in the phone book. I checked."],
+  ['Ist das so ein Schneeballsystem? Kam neulich im Fernsehen.', 'Is this one of those pyramid things? I saw one on TV.'],
+);
+LINES.narc.push(
+  ['Und unter welcher Adresse sitzt Ihre Firma?', "And what's your company's street address?"],
+  ['Haben Sie eine Zulassung? Die Nummer reicht.', 'Are you licensed? Just the number is fine.'],
+  ['Sind Sie sicher, dass Sie das so sagen wollen?', 'Are you sure you want to put it that way?'],
+  ['Ich frage rein privat. Ganz privat.', 'I am asking strictly privately. Strictly.'],
+  ['Darf ich das Gespräch aufnehmen? Für mein Gedächtnis.', 'Mind if I record this? For my memory.'],
+  ['Kennen Sie zufällig die Wertpapiergesetze? Nur so.', 'Do you happen to know the securities laws? Just asking.'],
+  ['Ich hätte gern Ihre Durchwahl. Für Rückfragen.', "I'd like your direct line. For follow-up questions."],
+  ['Und das Geld geht auf welches Konto genau?', 'And which account does the money go to, exactly?'],
+);
+LINES.whale.push(
+  ['Ich will die ganze Firma. Geht das bis Mittag?', 'I want the whole company. Can it be done by noon?'],
+  ['Mein Butler hat Sie empfohlen. Er hat schlechten Geschmack.', 'My butler recommended you. He has bad taste.'],
+  ['Geld spielt keine Rolle. Zeit schon.', 'Money is no object. Time is.'],
+  ['Ich lege gleich auf. Außer Sie sagen etwas Kluges.', "I'm hanging up. Unless you say something smart."],
+);
+LINES.mom.push(
+  ['Hast du deine Schwester angerufen? Sie hat Geburtstag.', "Did you call your sister? It's her birthday."],
+  ['Der Junge von nebenan ist jetzt Zahnarzt. Nur so.', "The boy next door is a dentist now. Just saying."],
+  ['Ich hab dir Lasagne eingefroren. Holst du die ab?', 'I froze you some lasagna. Will you pick it up?'],
+);
+REPLIES.honest.push(
+  ['Ich hab die Firma nie gesehen. Nur das Logo.', "I've never seen the company. Just the logo."],
+  ['Der Chef der Firma ist der Schwager von meinem Chef.', "The CEO is my boss's brother-in-law."],
+  ['Ich selbst kaufe die nicht. Nur damit Sie es wissen.', "I don't buy it myself. Just so you know."],
+  ['Der Kurs steigt nur, weil ich gerade alle anrufe.', "The price only goes up because I'm calling everyone."],
+  ['Die Firma sitzt in einer Garage. Kein Witz.', 'The company is run out of a garage. No joke.'],
+  ['Das ist Glücksspiel, nur am Telefon.', "It's gambling, just over the phone."],
+  ['Ich lese das von einem Zettel ab. Seit heute Morgen.', "I'm reading this off a script. Since this morning."],
+  ['Ich hab keine Ahnung. Ich bin seit Montag hier.', 'I have no idea. I started Monday.'],
+);
+REPLIES.smooth.push(
+  ['Sie haben eine Stimme, die nach Geld klingt.', 'You have a voice made for money.'],
+  ['Ich sehe Sie schon in einem neuen Cadillac.', 'I can already see you in a new Cadillac.'],
+  ['Das ist kein Kauf. Das ist eine Einladung.', "This isn't a purchase. It's an invitation."],
+  ['Wer zögert, ruft mich nächste Woche heulend an.', 'The ones who wait call me crying next week.'],
+  ['Fangen wir klein an. Nur zum Reinschnuppern.', "Let's start small. Just a taste."],
+  ['Ich hab bei Ihnen ein gutes Gefühl. Wirklich.', "I've got a good feeling about you. Really."],
+  ['Meine Mutter ist auch drin. Fragen Sie sie.', "My mom's in too. Ask her."],
+  ['Zwei Minuten, und Sie sind Teilhaber.', "Two minutes and you're a shareholder."],
+);
+REPLIES.lie.push(
+  ['Ein Filmstar kauft heute Nachmittag. Wer, darf ich nicht sagen.', "A movie star buys this afternoon. Can't say who."],
+  ['Das ist staatlich abgesichert. Steht irgendwo.', "It's government insured. It says so somewhere."],
+  ['Die Firma hat ein Patent auf Wolken.', 'The company holds a patent on clouds.'],
+  ['Morgen steht das in allen Zeitungen. Ganz vorn.', "It'll be on every front page tomorrow."],
+  ['Mein Cousin sitzt bei der Börsenaufsicht. Alles abgesegnet.', 'My cousin works for the regulators. All approved.'],
+  ['Die Aktie ist noch nie gefallen. Kein einziges Mal.', 'This stock has never gone down. Not once.'],
+  ['Wer heute kauft, kriegt morgen das Doppelte. Schriftlich.', 'Buy today, get double tomorrow. In writing.'],
+  ['Die Firma wird nächste Woche zur Bank. Mit Tresor.', 'Next week the company becomes a bank. With a vault.'],
+);
+// what callers say when they buy or hang up
+const CLOSE_QUIPS = [
+  ['Na gut, ich nehme 500 Stück.', "Fine, I'll take 500."], ['Machen Sie 1.000. Nein, 2.000.', 'Make it 1,000. No, 2,000.'],
+  ['Ich vertraue Ihnen. Warum auch immer.', 'I trust you. No idea why.'], ['Wehe, das geht schief.', 'This better not go wrong.'],
+  ['Meine Frau bringt mich um. Kaufen!', 'My wife will kill me. Buy!'], ['Ich bin dabei. Was mach ich hier eigentlich?', "I'm in. What am I even doing?"],
+];
+const FAIL_QUIPS = [
+  ['Nein danke. *klick*', 'No thanks. *click*'], ['Kein Interesse. *tuut*', 'Not interested. *beep*'],
+  ['Ich ruf meinen Anwalt an. *klick*', "I'm calling my lawyer. *click*"], ['Netter Versuch. *klick*', 'Nice try. *click*'],
+];
+const pickVis = list => L(list[Math.floor(Math.random() * list.length)]); // visual text only, never gameplay
+
 // ---- Formatting -------------------------------------------------------------------------
 const LOC = () => (lang === 'de' ? 'de-DE' : 'en-US');
 const fmtPrice = p => new Intl.NumberFormat(LOC(), { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: p < 1 ? 3 : 2 }).format(p);
@@ -641,11 +758,32 @@ const SFX = {
 
 // ---- Scenes ---------------------------------------------------------------------------
 let scene, state, deckUsed;
+// tutorial: tips pause the day the first time something happens
+const TIPS = { call: ['tipCall', '.call'], replies: ['tipReplies', '#replies'], close: ['tipClose', '#hPrice'], heat: ['tipHeat', '.heat, #shredBtn'], narc: ['tipNarc', '#cSay'], dump: ['tipDump', '#dumpBtn, #hClock'] };
+const tut = { on: store.get('tut') !== 'done', seen: new Set(), queue: [] };
+function queueTips(...ids) {
+  for (const id of ids) if (tut.on && !tut.seen.has(id) && !tut.queue.includes(id)) tut.queue.push(id);
+  if (tut.queue.length && scene === 'play') showTip();
+}
+function showTip() {
+  const id = tut.queue.shift(); tut.seen.add(id);
+  const [key, sel] = TIPS[id];
+  $('tipText').textContent = T(key);
+  document.querySelectorAll('.spot').forEach(e => e.classList.remove('spot'));
+  document.querySelectorAll(sel).forEach(e => e.classList.add('spot'));
+  setScene('tip');
+}
+function closeTip() {
+  document.querySelectorAll('.spot').forEach(e => e.classList.remove('spot'));
+  if (tut.seen.size >= Object.keys(TIPS).length) store.set('tut', 'done');
+  if (tut.on && tut.queue.length) showTip(); else setScene('play');
+}
 function setScene(name) {
   const prev = scene; scene = name;
-  const screen = { title: 's-title', play: 's-play', pause: 's-play', ending: 's-play', results: 's-results', figures: 's-figures' }[name];
+  const screen = { title: 's-title', play: 's-play', pause: 's-play', tip: 's-play', ending: 's-play', results: 's-results', figures: 's-figures' }[name];
   ['s-title', 's-play', 's-results', 's-figures'].forEach(id => { $(id).hidden = id !== screen; });
   $('pauseOv').hidden = name !== 'pause';
+  $('tip').hidden = name !== 'tip';
   if (name !== 'ending') $('endOv').hidden = true;
   if (name === 'title') paintTitle();
   if (name === 'play' && prev !== 'pause') requestAnimationFrame(() => fitCanvas(chart));
@@ -707,6 +845,8 @@ function makeCall() {
   };
   s.calls++;
   SFX.ring(); paintCall();
+  if (s.calls === 1) queueTips('call', 'replies');
+  if (kind === 'narc' && s.narcs === 1) queueTips('narc');
   events.push({ t: s.t, type: 'call', kind });
 }
 function addHeat(v) { state.heat = Math.max(0, state.heat + v); }
@@ -740,10 +880,12 @@ function answer(i) {
       SFX.stamp(); SFX.cash(); if (type === 'lie') shake();
     }
     fxFloat('+' + Math.round(gain * 100) + ' %', false, true);
+    if (c.kind !== 'narc') fxFloat(pickVis(CLOSE_QUIPS), false);
+    if (s.closes === 1) queueTips('close');
   } else {
     s.combo = 0;
     if (c.kind === 'cautious' && type === 'lie') { addHeat(tune.heatFail); fxFloat(T('quipBBB'), true); }
-    else fxFloat(type === 'honest' && c.kind === 'greedy' ? T('quipBoring') : T('quipClick'), true);
+    else fxFloat(type === 'honest' && c.kind === 'greedy' ? T('quipBoring') : pickVis(FAIL_QUIPS), true);
     fxStamp(T('hungup'), 'blue'); SFX.busy();
   }
   paintCall();
@@ -792,11 +934,18 @@ const scenes = {
       else s.dumpT = Math.max(0, s.dumpT - dt * 3);
       // the walls closing in
       if (s.heat >= tune.heatWarn) { s.beatT -= dt; if (s.beatT <= 0) { SFX.thump(); s.beatT = lerp(0.9, 0.35, (s.heat - tune.heatWarn) / (100 - tune.heatWarn)); } }
+      // the closing bell: a notice at 30 s, a ticking count from 15 s
+      const left = tune.dayLength - s.t, sec = Math.ceil(left);
+      if (!s.bell30 && left <= 30) { s.bell30 = true; fxFloat(T('bellSoon'), true); SFX.click(); }
+      if (left <= 15 && sec !== s.lastSec) { s.lastSec = sec; tone(sec <= 5 ? 1320 : 990, 0.07, 'square', 0.07); }
+      if (s.heat >= 20) queueTips('heat');
+      if (s.t >= 25) queueTips('dump');
       if (s.heat >= 100) endRun('raid');
       else if (s.t >= tune.dayLength) endRun('halt');
     },
   },
   pause: { update() { if (pressed('KeyP') || pressed('Escape') || enter()) setScene('play'); } },
+  tip: { update() { if (enter() || pressed('Space') || pressed('Escape') || pressed('Digit1') || pressed('Digit2') || pressed('Digit3')) closeTip(); } },
   ending: {
     update(dt) {
       const s = state; s.endT += dt;
@@ -1068,7 +1217,10 @@ function paintHud() {
   $('cPat').style.transform = `scaleX(${s.call ? Math.max(0, s.call.patience / s.call.max) : 0})`;
   $('shredFill').style.transform = `scaleX(${s.shredHold / (tune.shredTime + s.shredBags * tune.shredGrow)})`;
   $('dumpFill').style.transform = `scaleX(${Math.min(1, s.dumpT / tune.dumpHold)})`;
-  for (const b of $('replies').children) b.disabled = !s.call || s.shredHold > 0 || scene !== 'play';
+  for (const b of $('replies').children) b.disabled = !s.call || s.shredHold > 0 || (scene !== 'play' && scene !== 'tip');
+  const left = Math.max(0, tune.dayLength - s.t);
+  $('dayFill').style.transform = `scaleX(${Math.min(1, s.t / tune.dayLength)})`; $('dayFill').parentElement.classList.toggle('late', left <= 15);
+  $('bell').hidden = left > 15 || scene === 'ending'; setText($('bellN'), String(Math.ceil(left)));
 }
 // effects live on the pad and leave by themselves
 function fxAt(el, x, y, ms) { el.style.left = x + 'px'; el.style.top = y + 'px'; $('board').appendChild(el); setTimeout(() => el.remove(), ms); }
@@ -1157,6 +1309,9 @@ $('dareBtn').addEventListener('click', dare);
 $('langBtn').addEventListener('click', () => { lang = lang === 'de' ? 'en' : 'de'; store.set('lang', lang); paintTitle(); });
 for (const id of ['muteBtn', 'muteBtnT']) $(id).addEventListener('click', () => { startAudio(); setMuted(!muted); });
 $('pauseBtn').addEventListener('click', () => { if (scene === 'play') setScene('pause'); });
+$('tipNext').addEventListener('click', () => { if (scene === 'tip') closeTip(); });
+$('tipOff').addEventListener('click', () => { tut.on = false; tut.queue = []; store.set('tut', 'done'); if (scene === 'tip') closeTip(); });
+$('howtoBtn').addEventListener('click', () => { store.set('tut', ''); tut.on = true; tut.seen.clear(); tut.queue = []; readName(); start(challenge ? challenge.run : current); });
 $('resumeBtn').addEventListener('click', () => { if (scene === 'pause') setScene('play'); });
 for (const b of $('replies').children) b.addEventListener('click', () => answer(Number(b.dataset.i)));
 for (const [id, key] of [['shredBtn', 'shred'], ['dumpBtn', 'dump']]) {
@@ -1178,7 +1333,7 @@ function tick() {
   while (acc >= STEP) { step(); acc -= STEP; }
   drawFrame();
 }
-function drawFrame() { if (scene === 'play' || scene === 'pause' || scene === 'ending') { drawChart(); paintHud(); } }
+function drawFrame() { if (scene === 'play' || scene === 'pause' || scene === 'ending' || scene === 'tip') { drawChart(); paintHud(); } }
 function frame() { tick(); requestAnimationFrame(frame); }
 function timer() { if (document.visibilityState === 'visible' && clock.now() - last > 0.1) tick(); }
 
