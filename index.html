@@ -84,7 +84,7 @@ button { cursor: pointer; touch-action: manipulation; }
 .on-desk .btn { border-color: var(--color-desk-ink); color: var(--color-desk-ink); }
 .on-desk .btn:hover { background: var(--tint-desk); }
 .on-desk .btn-primary { border-color: var(--color-accent); color: var(--color-accent-ink); }
-.linkish { background: none; border: 0; padding: var(--space-xs); color: inherit; text-decoration: underline; text-underline-offset: 0.2em; font-size: var(--text-sm); min-height: 44px; }
+.linkish { background: none; border: 0; padding: var(--space-xs); color: inherit; text-decoration: underline; text-underline-offset: 0.2em; font-size: var(--text-sm); min-height: 44px; display: inline-flex; align-items: center; }
 
 /* title */
 #s-title { min-height: 100dvh; display: grid; place-items: center; padding: var(--space-lg) var(--space-md); }
@@ -275,6 +275,7 @@ button { cursor: pointer; touch-action: manipulation; }
         <button class="linkish" id="langBtn" type="button" data-t="otherLang"></button>
         <button class="linkish" id="muteBtnT" type="button"></button>
         <button class="linkish" id="howtoBtn" type="button" data-t="howto"></button>
+        <a class="linkish" id="garageLink" href="garage/" data-t="garageLink"></a>
       </div>
     </div>
   </section>
@@ -408,7 +409,7 @@ const S = {
     shareHead: "Pump & Dump '87, Tag {n}", shareFree: "Pump & Dump '87, freies Spiel", shareEnd: { dump: 'DUMP', raid: 'RAZZIA', halt: 'AUSGESETZT' },
     shareLies: 'Gelogen: {n}-mal', figNames: { greedy: 'Gierig', cautious: 'Vorsichtig', narc: 'Ermittler', whale: 'Wal', mom: 'Mama' },
     defaultName: 'Anonym',
-    howto: "So geht's", tipNext: 'Verstanden', tipOff: 'Tipps aus', bellLeft: 'bis zur Glocke', bellSoon: 'Noch 30 Sekunden bis zur Schlussglocke',
+    howto: "So geht's", garageLink: 'Garage-Version (im Bau)', tipNext: 'Verstanden', tipOff: 'Tipps aus', bellLeft: 'bis zur Glocke', bellSoon: 'Noch 30 Sekunden bis zur Schlussglocke',
     tipCall: 'Ein Kunde ruft an. Oben steht, wer er ist und was er fragt. Daran erkennst du, was ihn überzeugt.',
     tipReplies: 'Wähl eine Antwort mit 1, 2, 3 oder per Tippen. Gelogen treibt den Kurs am stärksten, füllt aber die SEC-Leiste. Ehrlich ist sicher und bringt wenig. Vorsichtige Leute legen bei Lügen auf.',
     tipClose: 'Verkauft. Der Kurs steigt, und dein Paket ist mehr wert. Dein Ziel: den Kurs hochtreiben und dann alles verkaufen.',
@@ -451,7 +452,7 @@ const S = {
     shareHead: "Pump & Dump '87, day {n}", shareFree: "Pump & Dump '87, free play", shareEnd: { dump: 'DUMPED', raid: 'RAIDED', halt: 'HALTED' },
     shareLies: 'Lies told: {n}', figNames: { greedy: 'Greedy', cautious: 'Cautious', narc: 'Investigator', whale: 'Whale', mom: 'Mom' },
     defaultName: 'Anonymous',
-    howto: 'How to play', tipNext: 'Got it', tipOff: 'No more tips', bellLeft: 'to the bell', bellSoon: '30 seconds to the closing bell',
+    howto: 'How to play', garageLink: 'Garage version (in the works)', tipNext: 'Got it', tipOff: 'No more tips', bellLeft: 'to the bell', bellSoon: '30 seconds to the closing bell',
     tipCall: 'A client is calling. The top tells you who they are and what they ask. That is how you know what wins them over.',
     tipReplies: 'Pick a reply with 1, 2, 3 or a tap. A lie pushes the price furthest but fills the SEC bar. Honest is safe and earns little. Careful callers hang up on lies.',
     tipClose: 'Sold. The price goes up and your bag is worth more. Your goal: pump the price, then sell everything.',

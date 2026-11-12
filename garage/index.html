@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pump & Dump '87: Garage</title>
+<meta name="description" content="The 3D co-op garage version of Pump & Dump '87 is being built.">
+<meta name="theme-color" content="#2b1d14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23f4e07a'/%3E%3Cpath d='M8 50 L22 40 L30 44 L44 18 L56 10' fill='none' stroke='%231c1714' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M56 10 L56 56' stroke='%23c8261b' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+/* Hallmark · shape: app screen · genre: playful · theme: custom · idea: "placeholder for the garage version, same pad as the notepad game" · paper: oklch(24% 0.035 50) · accent: oklch(52% 0.2 28) · display: Antonio · body: Antonio · outlier: Patrick Hand · contrast: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P3 H4 E4 S4 R4 V3 · weakest: V, it reuses the notepad title on purpose */
+/* waive 38iii: the red '87 is the game's logo mark, the same as on the notepad title */
+:root {
+  --color-paper: oklch(24% 0.035 50); --color-paper-2: oklch(90% 0.12 98); --color-ink: oklch(20% 0.01 60); --color-ink-2: oklch(38% 0.14 265);
+  --color-muted: oklch(46% 0.05 80); --color-rule: oklch(74% 0.06 240); --color-margin: oklch(60% 0.17 25); --color-binding: oklch(36% 0.1 25);
+  --color-accent: oklch(52% 0.2 28); --color-accent-deep: oklch(44% 0.18 28); --color-accent-ink: oklch(98% 0.01 80); --color-focus: oklch(62% 0.2 262);
+  --shadow-pad-c: oklch(0% 0 0 / 0.45); --color-desk-ink: oklch(92% 0.02 80); --color-desk-muted: oklch(74% 0.03 70);
+  --font-display: "Antonio", "Arial Narrow", sans-serif; --font-outlier: "Patrick Hand", cursive;
+  --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --radius: 6px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: clip; margin: 0; min-height: 100%; }
+html { scrollbar-color: var(--color-desk-muted) var(--color-paper); }
+::selection { background: var(--color-paper-2); color: var(--color-ink); }
+body { background: var(--color-paper); color: var(--color-desk-ink); font-family: var(--font-display); display: grid; place-items: center; min-height: 100dvh; padding: var(--space-lg) var(--space-md); }
+:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+main { color: var(--color-ink); width: min(100%, 560px); padding: var(--space-xl) var(--space-lg) var(--space-lg) 72px; display: grid; gap: var(--space-md); border-radius: var(--radius);
+  background-color: var(--color-paper-2); border-top: 14px solid var(--color-binding); box-shadow: 0 18px 40px var(--shadow-pad-c);
+  background-image: linear-gradient(90deg, transparent 46px, var(--color-margin) 46px, var(--color-margin) 48px, transparent 48px), repeating-linear-gradient(180deg, transparent 0 31px, var(--color-rule) 31px 32px); }
+h1 { text-wrap: balance; margin: 0; font-size: clamp(2.6rem, 8vw, 4.5rem); line-height: 1; text-transform: uppercase; overflow-wrap: break-word; min-width: 0; }
+h1 span { color: var(--color-accent-deep); }
+p { margin: 0; font-family: var(--font-outlier); font-size: 1.4rem; line-height: 1.2; color: var(--color-ink-2); }
+a { justify-self: start; display: inline-flex; align-items: center; min-height: 48px; padding: 0 var(--space-lg); border-radius: var(--radius); background: var(--color-accent); color: var(--color-accent-ink); font-weight: 700; font-size: 1.35rem; text-decoration: none; transition: background-color 120ms ease-out, transform 120ms ease-out; }
+a:hover { background: var(--color-accent-deep); }
+a:active { transform: translateY(2px); }
+@media (max-width: 560px) { main { padding-left: var(--space-xl); } }
+@media (prefers-reduced-motion: reduce) { * { transition-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Die Garage <span>'87</span></h1>
+  <p id="say">Die 3D-Version mit Koop ist im Bau. Bis dahin läuft das Geschäft auf dem Notizblock.</p>
+  <a id="back" href="../">Zum Notizblock</a>
+</main>
+<script>
+// shortcut: two strings only; the real game brings its own words
+if (!(navigator.language || 'en').toLowerCase().startsWith('de') && new URLSearchParams(location.search).get('lang') !== 'de') {
+  document.documentElement.lang = 'en';
+  document.querySelector('h1').firstChild.textContent = 'The garage ';
+  document.getElementById('say').textContent = 'The 3D co-op version is being built. Until then, business runs on the notepad.';
+  document.getElementById('back').textContent = 'Back to the notepad';
+}
+</script>
+</body>
+</html>

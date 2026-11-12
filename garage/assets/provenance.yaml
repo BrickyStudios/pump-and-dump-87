@@ -1,0 +1,14 @@
+- path: vendor/three.js
+  origin: licensed
+  source: {product: three.js, version: "0.186.1", url: https://threejs.org}
+  licence: {id: MIT}
+  tool: "esbuild 0.28.2, one plain script for play from a file"
+  date: 2026-11-12
+  ships: true
+- path: vendor/peerjs.min.js
+  origin: licensed
+  source: {product: PeerJS, version: "1.5.4", url: https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js}
+  licence: {id: MIT}
+  tool: "curl, unchanged"
+  date: 2026-11-12
+  ships: true

@@ -29,7 +29,7 @@ A trading day lasts 75 seconds. The phone rings, a caller asks something, and yo
 - Hold **D** (or Dump) to sell everything at the current price. That ends the day.
 - At 100 % SEC interest you get raided and keep nothing. If you never dump, the stock is halted at 16:00 and you keep nothing too.
 
-Keys: 1, 2, 3 to answer, M for sound, P to pause. On a phone you tap.
+Keys: 1, 2, 3 to answer, M for sound, P to pause. On a phone you tap. Your first game pauses for six short tips; "How to play" on the title screen shows them again.
 
 ## The front page
 
@@ -51,6 +51,8 @@ python3 -m http.server 8000
 ```
 
 Then open http://localhost:8000. Every tuning value (gains, heat, odds, timers) sits in `config.js`.
+
+The `garage/` folder holds the start of a 3D co-op version: three.js and PeerJS are in place, the game is not built yet. See [garage/README.md](garage/README.md).
 
 ## Fine print
 
