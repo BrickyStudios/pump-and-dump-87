@@ -1,0 +1,1203 @@
+<!doctype html>
+<!-- Question: Macht Pushen-bis-kurz-vor-der-Razzia in 75 Sekunden süchtig genug, dass Leute ihre Zeitungsseite teilen? -->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pump & Dump '87</title>
+<meta name="description" content="A 75-second browser game: phone a worthless penny stock up, lie to the right callers, and dump before the SEC raids your boiler room. Ends with a shareable tabloid front page.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pump & Dump '87">
+<meta property="og:description" content="Phone a worthless stock up. Dump before the SEC calls. 75 seconds, one tabloid front page with your name on it.">
+<meta property="og:url" content="https://brickystudios.github.io/pump-and-dump-87/">
+<meta property="og:image" content="https://brickystudios.github.io/pump-and-dump-87/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#2b1d14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23f4e07a'/%3E%3Cpath d='M8 50 L22 40 L30 44 L44 18 L56 10' fill='none' stroke='%231c1714' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M56 10 L56 56' stroke='%23c8261b' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+/* Hallmark · shape: app screen · genre: playful · theme: custom · idea: "a sales script pad on a 1987 desk, and a tabloid that prints your downfall" · vibe: "greedy, loud, ballpoint, phone cord, tabloid"
+ * paper: oklch(24% 0.035 50) walnut desk, stage oklch(90% 0.12 98) legal pad · accent: oklch(52% 0.2 28) tabloid red · display: Antonio · body: Antonio · outlier: Patrick Hand (the script lines)
+ * nav: none, one strip with ticker, price, clock, sound · signature: the felt-tip price line on the legal pad · states: title, play, pause, raid, halt, dump, front page, figures
+ * axes: dark/display-condensed/warm · posture: one warm signal on dark wood, a yellow pad as the stage; red also fills the heat meter and the rubber stamps, because both are the game's alarm · contrast: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E3 S5 R3 V4 · weakest: R, the ruled pad is a drawn surface; it is the play field that carries the chart, so it stays */
+/* waive 47c: the ruled legal pad is the game's play surface, not a decoration over content */
+:root {
+  --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px;
+  --text-xs: 0.875rem; --text-sm: 1rem; --text-md: 1.125rem; --text-lg: 1.35rem; --text-xl: 1.75rem; --text-2xl: 2.4rem; --text-display: clamp(3rem, 9vw, 6.5rem);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --dur-micro: 120ms; --dur-short: 220ms;
+  --color-paper: oklch(24% 0.035 50);      /* walnut desk */
+  --color-paper-2: oklch(90% 0.12 98);     /* legal pad */
+  --color-paper-3: oklch(92% 0.006 90);    /* newsprint */
+  --color-ink: oklch(20% 0.01 60);         /* marker */
+  --color-ink-2: oklch(38% 0.14 265);      /* ballpoint */
+  --color-muted: oklch(46% 0.05 80);       /* pencil on the pad */
+  --color-rule: oklch(74% 0.06 240);       /* pad ruling */
+  --color-margin: oklch(60% 0.17 25);      /* pad margin line */
+  --color-accent: oklch(52% 0.2 28);       /* tabloid red */
+  --color-accent-deep: oklch(44% 0.18 28); /* red text on the pad */
+  --color-accent-ink: oklch(98% 0.01 80);
+  --color-up: oklch(47% 0.12 145);         /* dollar green */
+  --color-desk-ink: oklch(92% 0.02 80);
+  --color-desk-muted: oklch(74% 0.03 70);
+  --color-desk-2: oklch(31% 0.04 50);
+  --color-binding: oklch(36% 0.1 25);       /* the pad's glued top */
+  --color-focus: oklch(62% 0.2 262);
+  --font-display: "Antonio", "Arial Narrow", sans-serif;
+  --font-body: "Antonio", "Arial Narrow", sans-serif;
+  --font-outlier: "Patrick Hand", "Comic Neue", cursive;
+  --radius: 6px; --pad-margin: 46px;
+  --shadow-pad-c: oklch(0% 0 0 / 0.45); --tint-ink: oklch(20% 0.01 60 / 0.08); --tint-desk: oklch(92% 0.02 80 / 0.1); --color-up-on-desk: oklch(78% 0.14 145); --color-down-on-desk: oklch(72% 0.16 28); --tint-track: oklch(20% 0.01 60 / 0.12); --color-reply: oklch(98% 0.03 98 / 0.55); --color-reply-hover: oklch(98% 0.03 98 / 0.9); --tint-press: oklch(0% 0 0 / 0.28); --color-warn-on-desk: oklch(78% 0.15 28); --scrim: oklch(15% 0.02 50 / 0.82); --shadow-text-c: oklch(0% 0 0 / 0.5); --siren-red: oklch(50% 0.2 28 / 0.55); --siren-blue: oklch(50% 0.2 262 / 0.55); --scrim-light: oklch(15% 0.02 50 / 0.35); --scrim-mid: oklch(15% 0.02 50 / 0.6); --shadow-paper-c: oklch(0% 0 0 / 0.55);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+html { scrollbar-color: var(--color-desk-muted) var(--color-paper); }
+::selection { background: var(--color-paper-2); color: var(--color-ink); }
+input { caret-color: var(--color-accent); }
+html, body { margin: 0; min-height: 100%; }
+body { background: var(--color-paper); color: var(--color-desk-ink); font-family: var(--font-body); font-size: var(--text-md); line-height: 1.35; -webkit-font-smoothing: antialiased; font-variant-numeric: tabular-nums; -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; overflow-wrap: break-word; min-width: 0; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+[hidden] { display: none !important; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; touch-action: manipulation; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* the pad */
+.pad { background-color: var(--color-paper-2); color: var(--color-ink); border-radius: var(--radius);
+  background-image: linear-gradient(90deg, transparent var(--pad-margin), var(--color-margin) var(--pad-margin), var(--color-margin) calc(var(--pad-margin) + 2px), transparent calc(var(--pad-margin) + 2px)),
+    repeating-linear-gradient(180deg, transparent 0 31px, var(--color-rule) 31px 32px);
+  box-shadow: 0 18px 40px var(--shadow-pad-c); border-top: 14px solid var(--color-binding); }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs); min-height: 48px; padding: 0 var(--space-lg); border: 2px solid var(--color-ink); border-radius: var(--radius); background: transparent; color: var(--color-ink); font-family: var(--font-body); font-weight: 700; font-size: var(--text-lg); letter-spacing: 0.01em; transition: transform var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out); user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.btn:hover { background: var(--tint-ink); }
+.btn:active { transform: translateY(2px); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-accent-ink); }
+.btn-primary:hover { background: var(--color-accent-deep); }
+.on-desk .btn { border-color: var(--color-desk-ink); color: var(--color-desk-ink); }
+.on-desk .btn:hover { background: var(--tint-desk); }
+.on-desk .btn-primary { border-color: var(--color-accent); color: var(--color-accent-ink); }
+.linkish { background: none; border: 0; padding: var(--space-xs); color: inherit; text-decoration: underline; text-underline-offset: 0.2em; font-size: var(--text-sm); min-height: 44px; }
+
+/* title */
+#s-title { min-height: 100dvh; display: grid; place-items: center; padding: var(--space-lg) var(--space-md); }
+.title-pad { width: min(100%, 640px); padding: var(--space-xl) var(--space-lg) var(--space-lg) 72px; display: grid; gap: var(--space-md); position: relative; }
+#titleFace { position: absolute; right: 18px; top: 26px; width: 160px; height: 160px; transform: rotate(6deg); pointer-events: none; }
+.logo { font-size: var(--text-display); line-height: 0.92; text-transform: uppercase; color: var(--color-ink); }
+.logo span { color: var(--color-accent-deep); }
+.tagline { font-family: var(--font-outlier); font-size: var(--text-xl); color: var(--color-ink-2); line-height: 1.15; }
+.today { font-size: var(--text-md); color: var(--color-muted); }
+.today b { color: var(--color-ink); }
+.challenge { border: 2px dashed var(--color-accent-deep); border-radius: var(--radius); padding: var(--space-sm); color: var(--color-accent-deep); font-size: var(--text-md); }
+.field { display: grid; gap: var(--space-2xs); }
+.field label { font-size: var(--text-sm); color: var(--color-muted); }
+.field input { font-family: var(--font-outlier); font-size: var(--text-xl); color: var(--color-ink-2); background: transparent; border: 0; border-bottom: 2px solid var(--color-ink); padding: var(--space-2xs) 0; min-height: 44px; width: 100%; }
+.actions { display: flex; flex-wrap: wrap; gap: var(--space-sm); align-items: center; }
+.controls { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; font-size: var(--text-sm); color: var(--color-muted); }
+.title-foot { display: flex; flex-wrap: wrap; gap: var(--space-xs); align-items: center; color: var(--color-muted); }
+
+/* play */
+#s-play { height: 100dvh; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: var(--space-sm); padding: var(--space-sm) var(--space-md) max(var(--space-sm), env(safe-area-inset-bottom)); max-width: 1280px; margin: 0 auto; position: relative; }
+.strip { display: flex; align-items: baseline; gap: var(--space-md); flex-wrap: wrap; min-width: 0; }
+.strip .tick { font-size: var(--text-xl); font-weight: 700; }
+.strip .co { color: var(--color-desk-muted); font-size: var(--text-sm); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1 1 8rem; }
+.strip .price { font-size: var(--text-2xl); font-weight: 700; line-height: 1; }
+.strip .chg { font-size: var(--text-md); }
+.strip .chg.up { color: var(--color-up-on-desk); } .strip .chg.down { color: var(--color-down-on-desk); }
+.strip .clock { font-size: var(--text-lg); }
+.strip .icon-btn { margin-left: auto; }
+.icon-btn { min-width: 44px; min-height: 44px; border: 2px solid var(--color-desk-muted); border-radius: var(--radius); background: transparent; color: var(--color-desk-ink); font-size: var(--text-sm); padding: 0 var(--space-xs); }
+.board { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 0; min-height: 0; position: relative; overflow: hidden; }
+.chart-wrap { position: relative; min-height: 0; padding: var(--space-md) var(--space-xs) var(--space-xs) 56px; }
+#chart { width: 100%; height: 100%; display: block; }
+.combo { margin-left: var(--space-sm); color: var(--color-accent-deep); font-weight: 400; }
+.bag { position: absolute; left: 60px; top: var(--space-sm); font-family: var(--font-outlier); font-size: var(--text-lg); color: var(--color-ink-2); pointer-events: none; }
+.call { display: grid; grid-template-rows: auto auto minmax(0, 1fr); gap: var(--space-sm); padding: var(--space-md) var(--space-md) var(--space-md) var(--space-sm); min-height: 0; border-left: 2px dashed var(--color-rule); }
+.caller { display: grid; grid-template-columns: 148px minmax(0, 1fr); gap: var(--space-sm); align-items: center; }
+#face { width: 148px; height: 148px; display: block; }
+.who { font-size: var(--text-lg); font-weight: 700; color: var(--color-ink); }
+.job { font-size: var(--text-sm); color: var(--color-muted); }
+.patience { height: 6px; background: var(--tint-track); border-radius: 3px; overflow: hidden; margin-top: var(--space-xs); }
+.patience i { display: block; height: 100%; background: var(--color-ink-2); transform-origin: left; }
+.say { font-family: var(--font-outlier); font-size: clamp(1.2rem, 2.1vw, 1.55rem); line-height: 1.2; color: var(--color-ink-2); min-height: 2.4em; }
+.replies { display: grid; gap: var(--space-xs); align-content: start; min-height: 0; }
+.reply { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: var(--space-xs); align-items: center; text-align: left; padding: var(--space-xs) var(--space-xs); min-height: 52px; border: 0; border-radius: var(--radius); background: var(--color-reply); color: var(--color-ink); transition: transform var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out); }
+.reply:hover { background: var(--color-reply-hover); }
+.reply:active { transform: scale(0.98); }
+.reply:disabled { opacity: 0.5; cursor: not-allowed; background: transparent; color: var(--color-muted); }
+.reply .k { font-family: var(--font-body); font-weight: 700; font-size: var(--text-lg); line-height: 1.5; text-align: center; border: 2px solid var(--color-ink); border-radius: 50%; width: 30px; height: 30px; display: grid; place-items: center; font-size: var(--text-sm); }
+.reply .txt { font-family: var(--font-outlier); font-size: clamp(1.05rem, 1.6vw, 1.25rem); line-height: 1.2; }
+.reply .tag { display: inline-block; font-family: var(--font-body); font-size: var(--text-xs); margin-right: var(--space-xs); vertical-align: 1px; }
+.tag-honest { color: var(--color-ink-2); } .tag-smooth { color: var(--color-up); } .tag-lie { color: var(--color-accent-deep); font-weight: 700; }
+.ringing { font-family: var(--font-outlier); font-size: var(--text-xl); color: var(--color-muted); }
+.desk { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--space-sm); align-items: end; }
+.heat { display: grid; gap: var(--space-2xs); min-width: 0; }
+.heat-top { display: flex; justify-content: space-between; gap: var(--space-xs); font-size: var(--text-sm); color: var(--color-desk-muted); }
+.heat-top b { color: var(--color-desk-ink); font-size: var(--text-md); }
+.heat-bar { position: relative; height: 22px; border-radius: var(--radius); background: var(--color-desk-2); overflow: hidden; }
+.heat-bar i { position: absolute; inset: 0; background: var(--color-accent); transform-origin: left; transform: scaleX(0); }
+.heat-bar .mark { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--color-desk-ink); opacity: 0.6; }
+.hold { position: relative; overflow: hidden; min-width: 132px; min-height: 64px; flex-direction: column; gap: var(--space-2xs); line-height: 1.1; }
+.hold small { font-size: var(--text-xs); font-weight: 400; }
+.hold .fill { position: absolute; inset: 0; background: var(--tint-press); transform-origin: left; transform: scaleX(0); pointer-events: none; }
+#dumpBtn { min-width: 168px; font-size: var(--text-xl); }
+.warn #s-play .heat-bar { box-shadow: 0 0 0 2px var(--color-accent); }
+.warn-line { color: var(--color-warn-on-desk); font-size: var(--text-sm); }
+
+/* effects */
+.fx { position: absolute; pointer-events: none; z-index: 5; }
+.stamp { font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 5vw, 3.6rem); color: var(--color-accent); border: 5px solid var(--color-accent); padding: 0 var(--space-sm); border-radius: 8px; transform: rotate(-9deg); opacity: 0.9; animation: stamp-in 180ms var(--ease-out) both; text-transform: uppercase; }
+.stamp.blue { color: var(--color-ink-2); border-color: var(--color-ink-2); }
+.stamp.green { color: var(--color-up); border-color: var(--color-up); }
+.float { font-family: var(--font-outlier); font-size: var(--text-xl); color: var(--color-up); animation: float-up 900ms var(--ease-out) both; }
+.float.bad { color: var(--color-accent-deep); }
+@keyframes stamp-in { from { transform: rotate(-9deg) scale(1.7); opacity: 0; } to { transform: rotate(-9deg) scale(1); opacity: 0.9; } }
+@keyframes float-up { from { transform: translateY(8px); opacity: 0; } 20% { opacity: 1; } to { transform: translateY(-36px); opacity: 0; } }
+.shake { animation: shake 240ms linear; }
+@keyframes shake { 25% { transform: translate(-4px, 2px); } 50% { transform: translate(3px, -2px); } 75% { transform: translate(-2px, 1px); } }
+
+/* overlays */
+.overlay { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; text-align: center; padding: var(--space-lg); }
+#pauseOv { background: var(--scrim); }
+#pauseOv h2 { font-size: var(--text-2xl); }
+#endOv { pointer-events: none; }
+#endOv h2 { font-size: clamp(2.4rem, 8vw, 5.5rem); text-transform: uppercase; line-height: 1; color: var(--color-accent-ink); text-shadow: 0 4px 0 var(--shadow-text-c); }
+#endOv.raid { animation: siren 500ms steps(1) infinite; }
+@keyframes siren { 0% { background: var(--siren-red); } 50% { background: var(--siren-blue); } }
+#endOv.dump { background: var(--scrim-light); }
+#endOv.halt { background: var(--scrim-mid); }
+
+/* results */
+#s-results { min-height: 100dvh; display: grid; grid-template-columns: minmax(0, auto) minmax(0, 360px); gap: var(--space-xl); align-items: center; justify-content: center; padding: var(--space-lg) var(--space-md); max-width: 1200px; margin: 0 auto; }
+#paper { display: block; height: min(88dvh, 1350px); width: auto; aspect-ratio: 4 / 5; max-width: 100%; border-radius: 2px; box-shadow: 0 24px 60px var(--shadow-paper-c); animation: paper-in 420ms var(--ease-out) both; }
+@keyframes paper-in { from { transform: translateY(24px) rotate(-2deg); opacity: 0; } to { transform: none; opacity: 1; } }
+.res-side { display: grid; gap: var(--space-md); }
+.res-side h2 { font-size: var(--text-2xl); line-height: 1; }
+.res-side .big { font-size: var(--text-xl); }
+.res-side .vs { font-size: var(--text-md); color: var(--color-desk-muted); }
+.res-actions { display: grid; gap: var(--space-sm); }
+.res-actions .btn { width: 100%; }
+.toast { position: fixed; left: 50%; bottom: var(--space-lg); transform: translateX(-50%); background: var(--color-desk-ink); color: var(--color-ink); padding: var(--space-xs) var(--space-md); border-radius: var(--radius); z-index: 30; font-size: var(--text-md); }
+
+/* figures (the outline check) */
+#s-figures { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--space-lg); padding: var(--space-xl); }
+#s-figures figure { margin: 0; text-align: center; }
+#s-figures canvas { width: 200px; height: 200px; }
+#s-figures figcaption { font-size: var(--text-lg); }
+
+@media (max-width: 820px), (orientation: portrait) and (max-width: 1000px) {
+  :root { --pad-margin: 26px; }
+  #s-play { padding: var(--space-xs) var(--space-xs) max(var(--space-xs), env(safe-area-inset-bottom)); gap: var(--space-xs); }
+  .strip { gap: var(--space-xs); flex-wrap: nowrap; align-items: center; }
+  .strip .co, .strip .chg { display: none; }
+  .strip .tick { font-size: var(--text-lg); }
+  .strip .price { font-size: var(--text-xl); }
+  .strip .clock { font-size: var(--text-md); }
+  .icon-btn { padding: 0 var(--space-xs); font-size: var(--text-xs); }
+  .board { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(100px, 26%) minmax(0, 1fr); }
+  .chart-wrap { padding: var(--space-xs) var(--space-2xs) 0 32px; }
+  .bag { left: 32px; font-size: var(--text-md); }
+  .call { border-left: 0; border-top: 2px dashed var(--color-rule); padding: var(--space-xs) var(--space-xs) var(--space-xs) 32px; gap: var(--space-xs); overflow-y: auto; grid-template-rows: auto auto auto; align-content: start; }
+  .replies { min-height: auto; }
+  .caller { grid-template-columns: 64px minmax(0, 1fr); }
+  #face { width: 64px; height: 64px; }
+  .who { font-size: var(--text-md); }
+  .say { min-height: 0; font-size: 1.15rem; }
+  .reply { min-height: 48px; padding: var(--space-2xs) var(--space-xs); }
+  .reply .txt { font-size: 1.05rem; }
+  .desk { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .heat { grid-column: 1 / -1; }
+  .hold { min-width: 0; width: 100%; }
+  #dumpBtn { min-width: 0; }
+  #s-results { grid-template-columns: minmax(0, 1fr); gap: var(--space-md); }
+  #paper { height: auto; width: 100%; }
+  .title-pad { padding: var(--space-lg) var(--space-md) var(--space-md) var(--space-xl); }
+}
+@media (max-width: 560px) { #titleFace { width: 104px; height: 104px; right: 8px; top: 18px; } }
+@media (max-height: 640px) and (orientation: landscape) {
+  #face { width: 72px; height: 72px; } .caller { grid-template-columns: 72px minmax(0, 1fr); }
+  .reply { min-height: 44px; } .say { min-height: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  #endOv.raid { background: var(--siren-red); }
+  .float { animation: none; opacity: 1; }
+}
+</style>
+</head>
+<body>
+<noscript><p style="padding:24px">Pump &amp; Dump '87 is a browser game and needs JavaScript. Pump &amp; Dump '87 ist ein Browserspiel und braucht JavaScript.</p></noscript>
+<main id="app">
+
+  <section id="s-title" aria-labelledby="logo" hidden>
+    <div class="title-pad pad">
+      <canvas id="titleFace" width="320" height="320" aria-hidden="true"></canvas>
+      <h1 class="logo" id="logo">Pump &amp; Dump <span>'87</span></h1>
+      <p class="tagline" data-t="tagline"></p>
+      <p class="today" id="today"></p>
+      <p class="challenge" id="challengeBox" hidden></p>
+      <div class="field">
+        <label for="nameIn" data-t="nameLabel"></label>
+        <input id="nameIn" maxlength="14" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="startBtn" type="button"></button>
+        <button class="btn" id="freeBtn" type="button" data-t="free"></button>
+      </div>
+      <ul class="controls">
+        <li data-t="c1"></li><li data-t="c2"></li><li data-t="c3"></li><li data-t="c4"></li>
+      </ul>
+      <p class="today" id="bestLine" hidden></p>
+      <div class="title-foot">
+        <button class="linkish" id="langBtn" type="button" data-t="otherLang"></button>
+        <button class="linkish" id="muteBtnT" type="button"></button>
+      </div>
+    </div>
+  </section>
+
+  <section id="s-play" aria-label="Pump & Dump '87" hidden>
+    <header class="strip">
+      <span class="tick" id="hTick"></span>
+      <span class="co" id="hCo"></span>
+      <span class="price" id="hPrice"></span>
+      <span class="chg" id="hChg"></span>
+      <span class="clock" id="hClock"></span>
+      <button class="icon-btn" id="muteBtn" type="button"></button>
+      <button class="icon-btn" id="pauseBtn" type="button" data-t="pause"></button>
+    </header>
+    <div class="board pad" id="board">
+      <div class="chart-wrap"><canvas id="chart"></canvas><span class="bag"><span id="hBag"></span> <b class="combo" id="hCombo"></b></span></div>
+      <div class="call">
+        <div class="caller" id="caller">
+          <canvas id="face" width="296" height="296" aria-hidden="true"></canvas>
+          <div>
+            <div class="who" id="cWho"></div>
+            <div class="job" id="cJob"></div>
+            <div class="patience" aria-hidden="true"><i id="cPat"></i></div>
+          </div>
+        </div>
+        <p class="say" id="cSay" aria-live="polite"></p>
+        <div class="replies" id="replies">
+          <button class="reply" type="button" data-i="0"><span class="k">1</span><span class="line"><span class="tag"></span><span class="txt"></span></span></button>
+          <button class="reply" type="button" data-i="1"><span class="k">2</span><span class="line"><span class="tag"></span><span class="txt"></span></span></button>
+          <button class="reply" type="button" data-i="2"><span class="k">3</span><span class="line"><span class="tag"></span><span class="txt"></span></span></button>
+        </div>
+      </div>
+    </div>
+    <div class="desk on-desk">
+      <div class="heat">
+        <div class="heat-top"><span data-t="heat"></span><span class="warn-line" id="warnLine"></span><b id="hHeat">0 %</b></div>
+        <div class="heat-bar" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="heatMeter"><i id="heatFill"></i><span class="mark" id="heatMark"></span></div>
+      </div>
+      <button class="btn hold" id="shredBtn" type="button"><span class="fill" id="shredFill"></span><span data-t="shred"></span><small data-t="shredHint"></small></button>
+      <button class="btn btn-primary hold" id="dumpBtn" type="button"><span class="fill" id="dumpFill"></span><span data-t="dump"></span><small data-t="dumpHint"></small></button>
+    </div>
+    <div class="overlay" id="pauseOv" hidden><div><h2 data-t="paused"></h2><p data-t="resume"></p><p><button class="btn btn-primary" id="resumeBtn" type="button" data-t="resumeBtn"></button></p></div></div>
+    <div class="overlay" id="endOv" hidden><h2 id="endText"></h2></div>
+  </section>
+
+  <section id="s-results" class="on-desk" hidden>
+    <canvas id="paper" width="1080" height="1350" role="img" aria-label=""></canvas>
+    <div class="res-side">
+      <h2 id="rTitle"></h2>
+      <p class="big" id="rBig"></p>
+      <p class="vs" id="rVs" hidden></p>
+      <div class="res-actions">
+        <button class="btn btn-primary" id="shareBtn" type="button" data-t="shareImg"></button>
+        <button class="btn" id="copyBtn" type="button" data-t="copyText"></button>
+        <button class="btn" id="dareBtn" type="button" data-t="dare"></button>
+        <button class="btn" id="againBtn" type="button" data-t="again"></button>
+        <button class="btn" id="freeBtn2" type="button" data-t="free"></button>
+      </div>
+    </div>
+  </section>
+
+  <section id="s-figures" aria-label="figures" hidden></section>
+</main>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="config.js"></script>
+<script>
+'use strict';
+// ---- Built to be checked (the studio's hooks: fixed step, clock hook, window.game) ----------
+const params = new URLSearchParams(location.search);
+const tune = new Proxy({}, { get: (_, k) => CONFIG[k].value });
+const STEP = 1 / 60;
+const clock = window.GAME_CLOCK || { now: () => performance.now() / 1000 };
+const SITE = 'https://brickystudios.github.io/pump-and-dump-87/';
+let seed;
+function rng() { // mulberry32; every gameplay random call reads this
+  seed = (seed + 0x6D2B79F5) | 0;
+  let t = Math.imul(seed ^ (seed >>> 15), seed | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+function mulberry(a) { return () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), a | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+const events = [];
+const $ = id => document.getElementById(id);
+const store = { // shortcut: localStorage only for name, language, sound and today's best; gone in private windows
+  get(k) { try { return localStorage.getItem('pd87-' + k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem('pd87-' + k, v); } catch (e) { /* private window */ } },
+};
+
+// ---- Words ------------------------------------------------------------------------------
+let lang = (() => {
+  const q = params.get('lang'); if (q === 'de' || q === 'en') return q;
+  const s = store.get('lang'); if (s === 'de' || s === 'en') return s;
+  return (navigator.language || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
+})();
+const S = {
+  de: {
+    tagline: 'Telefonier eine wertlose Aktie hoch. Verkauf, bevor die SEC klingelt.',
+    today: 'Heute an der Leitung: <b>{company}</b> ({ticker})', nameLabel: 'Dein Name für die Zeitung',
+    play: 'Tag {n} spielen', free: 'Freies Spiel', otherLang: 'English', soundOn: 'Ton an', soundOff: 'Ton aus',
+    c1: '1, 2, 3 oder tippen: antworten', c2: 'S halten: Akten schreddern', c3: 'D halten: alles verkaufen', c4: 'M: Ton, P: Pause',
+    best: 'Dein bester Tag {n}: {v}',
+    challenge: '{by} hat mit {ticker} {v} gemacht. Schaffst du mehr?', take: 'Herausforderung annehmen',
+    pause: 'Pause', paused: 'Pause', resume: 'Die Leitungen warten.', resumeBtn: 'Weiter',
+    heat: 'SEC-Interesse', shred: 'Schreddern', shredHint: 'halten', dump: 'Dumpen', dumpHint: 'halten, alles raus',
+    honest: 'Ehrlich', smooth: 'Charme', lie: 'Gelogen', ringing: 'Es klingelt …',
+    bag: 'Dein Paket: {v}', combo: '{n} in Folge', warn: 'Grauer Ford vor der Tür',
+    sold: 'Verkauft', whale: 'Wal!', fed: 'Ermittler!', hungup: 'Aufgelegt', clean: 'Sauber',
+    quipBoring: 'Zu langweilig. *klick*', quipBBB: 'Sie ruft die Verbraucherzentrale an.', quipClick: '*klick*', quipFed: 'Das war ein Ermittler.', quipClean: 'Er notiert: sauber.',
+    momHonest: 'Mama: „Ich bin trotzdem stolz auf dich.“', momSmooth: 'Mama: „Zieh dir was Warmes an.“', momLie: 'Mama hat 1.000 Stück gekauft.',
+    shredded: 'Akten weg', endDump: 'Alles raus!', endRaid: 'SEC! Hände auf den Tisch!', endHalt: 'Börsenschluss. Nie verkauft.',
+    shareImg: 'Zeitung teilen', copyText: 'Text kopieren', dare: 'Freund herausfordern', again: 'Nochmal, gleiche Aktie',
+    copied: 'Kopiert.', saved: 'Bild gespeichert, Text kopiert.', dareCopied: 'Link kopiert. Schick ihn rum.',
+    take_: 'Beute', onPaper: 'Auf dem Papier', calls: 'Anrufe', closes: 'Abschlüsse', lies: 'Gelogen', peak: 'Höchstkurs', fedsLied: 'Ermittler belogen', momScam: 'Hat der eigenen Mutter Aktien verkauft.',
+    rankLabel: 'Titel des Tages', edition: 'Ausgabe {n}, 25 Cent', footer: 'Schlag das: brickystudios.github.io/pump-and-dump-87',
+    chartCap: 'Kursverlauf {ticker}, {company}',
+    stampDump: 'Gedumpt', stampRaid: 'Verhaftet', stampHalt: 'Ausgesetzt',
+    vsWin: 'Gegen {by}: {you} zu {them}. Gewonnen.', vsLose: 'Gegen {by}: {you} zu {them}. Verloren.',
+    hlDumpLoss: ['{name} verkauft zu früh und verliert Geld', 'Die Kollegen lachen bis heute. {ticker} steigt danach übrigens.'],
+    hlDumpSmall: ['{ticker}: kurzer Rausch, kleiner Dump', '{name} kassiert {payout} und kauft davon einen gebrauchten Ford.'],
+    hlDumpMid: ['Mysteriöser Absturz: {ticker} minus {drop} %', 'Broker {name} kassiert {payout}. Anleger rufen ins Leere an.'],
+    hlDumpBig: ['{ticker} implodiert, Broker weg', '{name} kassiert {payout} und soll auf den Bahamas gesehen worden sein.'],
+    hl420: ['Verkauft bei 4,20 $. Natürlich.', '{name} kassiert {payout} und lacht seit Stunden über die eigene Zahl.'],
+    hlRaid: ['SEC stürmt Telefonbude', '{name} mit {paper} auf dem Papier abgeführt. Letzte Worte: „Nur noch ein Anruf.“'],
+    hlRaidNarc: ['SEC stürmt Telefonbude', 'Der nette Herr auf Leitung 3 war Ermittler. {name} hat ihn {n}-mal angelogen.'],
+    hlHalt: ['{ticker} vom Handel ausgesetzt', '{name} sitzt auf {shares} wertlosen Aktien und einem Telefon.'],
+    ranks: ['Praktikant ohne Stuhl', 'Telefonist', 'Junior-Hai', 'Penny-Prinz', 'Yacht ohne Führerschein', 'Legende der Telefonbude'],
+    rankRaid: 'Häftling Nr. {n}', rankHalt: 'Bagholder',
+    shareHead: "Pump & Dump '87, Tag {n}", shareFree: "Pump & Dump '87, freies Spiel", shareEnd: { dump: 'DUMP', raid: 'RAZZIA', halt: 'AUSGESETZT' },
+    shareLies: 'Gelogen: {n}-mal', figNames: { greedy: 'Gierig', cautious: 'Vorsichtig', narc: 'Ermittler', whale: 'Wal', mom: 'Mama' },
+    defaultName: 'Anonym',
+  },
+  en: {
+    tagline: 'Phone a worthless stock to the moon. Sell before the SEC calls.',
+    today: 'On the line today: <b>{company}</b> ({ticker})', nameLabel: 'Your name, for the papers',
+    play: 'Play day {n}', free: 'Free play', otherLang: 'Deutsch', soundOn: 'Sound on', soundOff: 'Sound off',
+    c1: '1, 2, 3 or tap: answer', c2: 'Hold S: shred files', c3: 'Hold D: dump everything', c4: 'M: sound, P: pause',
+    best: 'Your best on day {n}: {v}',
+    challenge: '{by} made {v} on {ticker}. Can you beat it?', take: 'Take the challenge',
+    pause: 'Pause', paused: 'Paused', resume: 'The lines are waiting.', resumeBtn: 'Resume',
+    heat: 'SEC interest', shred: 'Shred', shredHint: 'hold', dump: 'Dump', dumpHint: 'hold, sell it all',
+    honest: 'Honest', smooth: 'Smooth', lie: 'Lie', ringing: 'Ringing…',
+    bag: 'Your bag: {v}', combo: '{n} in a row', warn: 'Grey sedan parked outside',
+    sold: 'Sold', whale: 'Whale!', fed: 'A fed!', hungup: 'Hung up', clean: 'Clean',
+    quipBoring: 'Too boring. *click*', quipBBB: 'She is calling the Better Business Bureau.', quipClick: '*click*', quipFed: 'That was an investigator.', quipClean: 'He writes down: clean.',
+    momHonest: 'Mom: "I\'m still proud of you."', momSmooth: 'Mom: "Wear a sweater."', momLie: 'Mom bought a thousand shares.',
+    shredded: 'Files gone', endDump: 'Sell it all!', endRaid: 'SEC! Hands on the desk!', endHalt: 'Closing bell. You never sold.',
+    shareImg: 'Share the paper', copyText: 'Copy text', dare: 'Challenge a friend', again: 'Again, same stock',
+    copied: 'Copied.', saved: 'Image saved, text copied.', dareCopied: 'Link copied. Send it around.',
+    take_: 'Take', onPaper: 'On paper', calls: 'Calls', closes: 'Closes', lies: 'Lies', peak: 'Peak', fedsLied: 'Feds lied to', momScam: 'Sold stock to own mother.',
+    rankLabel: 'Title of the day', edition: 'Edition {n}, 25 cents', footer: 'Beat this: brickystudios.github.io/pump-and-dump-87',
+    chartCap: '{ticker}, {company}',
+    stampDump: 'Dumped', stampRaid: 'Busted', stampHalt: 'Halted',
+    vsWin: 'Vs {by}: {you} to {them}. You win.', vsLose: 'Vs {by}: {you} to {them}. You lose.',
+    hlDumpLoss: ['{name} sells too early, loses money', 'The desk still laughs about it. {ticker} went up afterwards, by the way.'],
+    hlDumpSmall: ['{ticker}: short high, small dump', '{name} walks with {payout} and buys a used Ford.'],
+    hlDumpMid: ['{ticker} crashes {drop} %, nobody knows why', 'Broker {name} cashes out {payout}. Investors call a disconnected number.'],
+    hlDumpBig: ['{ticker} implodes, broker gone', '{name} cashes out {payout} and was last seen in the Bahamas.'],
+    hl420: ['Sold at $4.20. Of course.', '{name} cashes out {payout} and has been laughing at the number for hours.'],
+    hlRaid: ['Feds raid boiler room', '{name} cuffed holding {paper} on paper. Last words: "One more call."'],
+    hlRaidNarc: ['Feds raid boiler room', 'The nice man on line 3 was an investigator. {name} lied to him {n} times.'],
+    hlHalt: ['{ticker} halted. Forever.', '{name} is left holding {shares} worthless shares and a phone.'],
+    ranks: ['Intern without a chair', 'Phone jockey', 'Junior shark', 'Penny prince', 'Yacht, no license', 'Boiler room legend'],
+    rankRaid: 'Inmate #{n}', rankHalt: 'Bagholder',
+    shareHead: "Pump & Dump '87, day {n}", shareFree: "Pump & Dump '87, free play", shareEnd: { dump: 'DUMPED', raid: 'RAIDED', halt: 'HALTED' },
+    shareLies: 'Lies told: {n}', figNames: { greedy: 'Greedy', cautious: 'Cautious', narc: 'Investigator', whale: 'Whale', mom: 'Mom' },
+    defaultName: 'Anonymous',
+  },
+};
+function T(key, v = {}) {
+  const s = S[lang][key];
+  return typeof s === 'string' ? s.replace(/\{(\w+)\}/g, (_, k) => (k in v ? v[k] : '{' + k + '}')) : s;
+}
+const fill = (s, v) => s.replace(/\{(\w+)\}/g, (_, k) => (k in v ? v[k] : '{' + k + '}'));
+const L = pair => pair[lang === 'de' ? 0 : 1];
+
+// ---- Content: companies, callers, replies -----------------------------------------------
+const COMPANIES = [
+  ['Antarktische Bananen AG', 'Antarctic Banana Co.', 'BNNA'], ['Selbstfahrende Pferde Inc.', 'Self-Driving Horses Inc.', 'HRSE'],
+  ['Gold unterm Parkplatz Mining', 'Gold Under The Parking Lot Mining', 'PRKG'], ['Wasserdichte Teebeutel GmbH', 'Waterproof Teabags Ltd.', 'SOGG'],
+  ['Faxgeräte für Katzen', 'Fax Machines For Cats', 'MEOW'], ['Diät-Wasser Inc.', 'Diet Water Inc.', 'DIET'],
+  ['Unsichtbare Tinte Corp.', 'Invisible Ink Corp.', 'NADA'], ['Grundstücke auf dem Mond', 'Moon Lots Direct', 'LUNA'],
+  ['Aufblasbare Ziegel AG', 'Inflatable Bricks Inc.', 'BRIK'], ['Rückwärtslaufende Uhren', 'Backwards Clocks Inc.', 'KCIT'],
+  ['Bio-Plastikobst', 'Organic Plastic Fruit', 'PLUM'], ['Hamster-Kraftwerke Nord', 'Hamster Power & Light', 'HMST'],
+  ['Windräder für drinnen', 'Indoor Wind Farms', 'FANS'], ['Videokassetten für Hunde', 'VHS For Dogs', 'WOOF'],
+  ['Lithium aus Laub', 'Lithium From Leaves', 'LEAF'], ['Schweizer Käse ohne Löcher', 'Hole-Free Swiss Cheese', 'NOHL'],
+  ['Kabellose Kabel AG', 'Wireless Cables Corp.', 'CBLZ'], ['Eiswürfel für Alaska', 'Ice Cubes For Alaska', 'CUBZ'],
+  ['Telefonzellen-Immobilien', 'Phone Booth Real Estate', 'PHBO'], ['Rasenpflege für die Wüste', 'Desert Lawn Care', 'DUNE'],
+];
+const NAMES = ['Doris', 'Earl', 'Marvin', 'Gloria', 'Herb', 'Shirley', 'Lou', 'Bev', 'Sal', 'Dolores', 'Chuck', 'Phyllis', 'Irving', 'Rhoda', 'Vince', 'Barb', 'Norm', 'Dot', 'Walt', 'Midge', 'Gus', 'Edna', 'Ray', 'Lorraine'];
+const MIKES = ['Mike', 'Steve', 'Greg', 'Tom'];
+const AGES = { greedy: [31, 58], cautious: [63, 86], narc: [29, 41], whale: [52, 77] };
+const JOBS = { // German job words without gender, so any name fits
+  greedy: [['Autohandel', 'car dealer'], ['Zahnarztpraxis', 'dentist'], ['besitzt eine Bowlingbahn', 'owns a bowling alley'], ['legt auf Hochzeiten auf', 'wedding DJ'], ['Pfandhaus', 'pawnbroker'], ['fährt Taxi', 'cab driver']],
+  cautious: [['in Rente', 'retired'], ['Lehramt, Grundschule', 'schoolteacher'], ['Stadtbibliothek', 'librarian'], ['Post, in Rente', 'retired mail carrier'], ['Pflege, Nachtschicht', 'night nurse'], ['Buchhaltung', 'bookkeeper']],
+  narc: [['„Vertrieb“', '"sales"'], ['„Privatanleger“', '"private investor"'], ['„Klempner“', '"plumber"'], ['„einfach ein Typ“', '"just a guy"']],
+  whale: [['erbt eine Reederei', 'shipping heir'], ['besitzt ein Kasino', 'casino owner'], ['Immobilien, Florida', 'real estate, Florida'], ['Ölfelder, Texas', 'oil, Texas']],
+};
+const LINES = {
+  greedy: [
+    ['Mein Schwager hat mit sowas einen Porsche verdient. Ich will zwei.', 'My brother-in-law got a Porsche out of one of these. I want two.'],
+    ['Wie schnell verdoppelt sich das? Ich hab bis Freitag Zeit.', "How fast does it double? I've got until Friday."],
+    ['Ich hab meine Briefmarkensammlung verkauft. Was geht?', "I sold my stamp collection. What've you got?"],
+    ['Ist das die Aktie, von der im Fitnessstudio alle reden?', "Is this the stock the guys at the gym won't shut up about?"],
+    ['Ich will nicht reich werden. Ich will peinlich reich werden.', "I don't want rich. I want embarrassing rich."],
+    ['Sagen Sie mir eine Zahl mit vielen Nullen.', 'Give me a number with a lot of zeros.'],
+    ['Meine Frau weiß nichts davon. Soll auch so bleiben.', "My wife doesn't know about this. Let's keep it that way."],
+    ['Ich hab im Lotto verloren und dachte, das hier ist so ähnlich.', 'I lost at the lottery and figured this is about the same.'],
+  ],
+  cautious: [
+    ['Das ist aber das Geld für meine neue Hüfte.', 'This is my new-hip money, you understand.'],
+    ['Ist das so sicher wie ein Sparbuch?', 'Is it as safe as a savings account?'],
+    ['Mein Enkel sagt, Aktien sind Glücksspiel.', 'My grandson says stocks are gambling.'],
+    ['Ich hab schon mal Geld verloren. 1974. Ich rede nicht drüber.', "I lost money once. 1974. I don't talk about it."],
+    ['Kann ich jederzeit wieder raus?', 'Can I get out whenever I want?'],
+    ['Meine Frau sagt, ich soll nichts am Telefon kaufen.', 'My wife says never buy anything over the phone.'],
+    ['Wer hat Ihnen meine Nummer gegeben?', 'Who gave you this number?'],
+    ['Das muss ich mit meinem Steuerberater besprechen. Er ist mein Sohn.', "I'll have to run it by my accountant. He's my son."],
+  ],
+  narc: [
+    ['Wie war Ihr vollständiger Name? Buchstabieren Sie bitte.', 'And what was your full name? Spell it for me.'],
+    ['Können Sie mir das schriftlich geben? Für meine Unterlagen.', 'Could you put that in writing? For my records.'],
+    ['Sagen Sie das nochmal. Langsam. Richtung Hörer.', 'Say that again. Slowly. Toward the receiver.'],
+    ['Ist das legal, was Sie da sagen? Rein hypothetisch.', "Is what you're saying legal? Hypothetically."],
+    ['Ich bin ein ganz normaler Anleger. Sehr normal. Normaler geht nicht.', "I'm a regular investor. Very regular. Extremely regular."],
+    ['Wie heißt Ihr Chef? Und wo sitzt der so, ungefähr?', "What's your boss's name? And where does he sit, roughly?"],
+    ['Klickt es bei Ihnen auch so in der Leitung? Egal. Weiter.', 'Is your line clicking too? Never mind. Go on.'],
+    ['Wie viele Leute haben Sie heute schon angerufen? Für die Statistik.', 'How many people have you called today? For statistics.'],
+  ],
+  whale: [
+    ['Ich habe drei Minuten. Überzeugen Sie mich.', "You've got three minutes. Convince me."],
+    ['Mein Fahrer wartet. Wie viel kann ich kaufen?', "My driver's waiting. How much can I buy?"],
+    ['Ich kaufe normalerweise keine Aktien. Ich kaufe Firmen.', "I don't usually buy stocks. I buy companies."],
+    ['Mein Steuerberater ist im Urlaub. Perfekter Zeitpunkt.', "My accountant's on vacation. Perfect timing."],
+    ['Ich hab gerade eine Insel verkauft. Wohin mit dem Geld?', 'I just sold an island. Where do I put the money?'],
+    ['Ich bin auf der Yacht, das Netz ist schlecht. Sagen Sie einfach ja.', "I'm on the yacht, bad signal. Just say yes."],
+  ],
+  mom: [
+    ['Schatz, isst du auch was Warmes?', 'Sweetie, are you eating hot meals?'],
+    ['Im Radio war was über Börsenbetrug. Du machst sowas nicht, oder?', "The radio said something about stock fraud. That's not you, right?"],
+    ['Die Nachbarin fragt, ob du noch Single bist. Und ob du Aktien hast.', 'The neighbor asks if you are still single. And if you have stocks.'],
+  ],
+};
+const REPLIES = {
+  honest: [
+    ['Ehrlich? Die Firma ist ein Briefkasten in Delaware.', 'Honestly? The company is a mailbox in Delaware.'],
+    ['Ich weiß es nicht. Niemand weiß es. Wirklich niemand.', "I don't know. Nobody knows. Nobody at all."],
+    ['Das ist ein Pennystock. Das „Penny“ ist wörtlich gemeint.', 'It is a penny stock. The penny part is literal.'],
+    ['Kann steigen. Kann auch bei null landen. Eher null.', 'Could go up. Could hit zero. Probably zero.'],
+    ['Ich kriege Provision. Ziemlich viel Provision.', 'I get a commission. A pretty big commission.'],
+    ['Einen Geschäftsbericht gibt es nicht. Ich hab gefragt.', 'There is no annual report. I asked.'],
+    ['Ich würde das meiner Mutter nicht verkaufen.', "I wouldn't sell this to my own mother."],
+    ['Sie können alles verlieren. Ich sag es nur.', 'You could lose all of it. Just saying.'],
+  ],
+  smooth: [
+    ['Ich hab heute Morgen selbst nachgekauft. Zweimal.', 'I bought more myself this morning. Twice.'],
+    ['Sie klingen wie jemand, der gern früh dabei ist.', 'You sound like someone who likes being early.'],
+    ['Die großen Häuser steigen nächste Woche ein. Das haben Sie nicht von mir.', "The big houses get in next week. You didn't hear it from me."],
+    ['Kleiner Einsatz, und Sie erzählen das später auf jeder Party.', "Small stake, and you'll tell this story at every party."],
+    ['Ich rufe nur meine Lieblingskunden an. Also Sie.', 'I only call my favorite clients. That means you.'],
+    ['Die Firma hat einen neuen Vorstand. Alle mit Krawatte.', 'The company has a new board. They all wear ties.'],
+    ['Ich reserviere Ihnen ein Paket, bevor es weg ist.', "Let me hold a block for you before it's gone."],
+    ['Mein Bauchgefühl lag erst zweimal daneben. Diese Woche.', "My gut's only been wrong twice. This week."],
+  ],
+  lie: [
+    ['Garantiert 900 Prozent. Mein Onkel sitzt im Vorstand.', "Guaranteed 900 percent. My uncle's on the board."],
+    ['Die haben Gold gefunden. Unter dem Parkplatz. Viel Gold.', 'They found gold. Under the parking lot. Lots of gold.'],
+    ['Die Regierung kauft nächste Woche alles auf. Pssst.', 'The government buys every share next week. Shhh.'],
+    ['Völlig risikofrei. Ich hab es nachgerechnet. Mit Taschenrechner.', 'Zero risk. I did the math. On a calculator.'],
+    ['Morgen wird übernommen. Von Japan. Mehr darf ich nicht sagen.', "Takeover tomorrow. By Japan. That's all I can say."],
+    ['Geht es schief, zahle ich es Ihnen aus eigener Tasche zurück.', "If it tanks, I'll pay you back out of my own pocket."],
+    ['Das ist im Grunde eine Staatsanleihe, nur lustiger.', "It's basically a government bond, just more fun."],
+    ['Ein Hedgefonds will heute noch kaufen. Ich halte ihn für Sie hin.', "A hedge fund wants in today. I'm stalling them for you."],
+  ],
+};
+const MOM_REPLIES = {
+  honest: ['Ja, Mama. Ich verkaufe Schrott am Telefon.', 'Yes, Mom. I sell junk over the phone.'],
+  smooth: ['Ich arbeite im Finanzwesen, Mama. Ganz seriös.', "I'm in finance, Mom. Very serious."],
+  lie: ['Kauf 1.000 Stück, Mama. Für die Rente.', 'Buy a thousand shares, Mom. For your retirement.'],
+};
+
+// ---- Formatting -------------------------------------------------------------------------
+const LOC = () => (lang === 'de' ? 'de-DE' : 'en-US');
+const fmtPrice = p => new Intl.NumberFormat(LOC(), { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: p < 1 ? 3 : 2 }).format(p);
+const fmtMoney = v => new Intl.NumberFormat(LOC(), { style: 'currency', currency: 'USD', notation: Math.abs(v) >= 1e5 ? 'compact' : 'standard', maximumFractionDigits: Math.abs(v) >= 1e6 ? 2 : 0 }).format(v);
+const fmtInt = n => new Intl.NumberFormat(LOC()).format(n);
+const cleanName = s => String(s || '').replace(/[^\p{L}\p{N} .'-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 14);
+
+// ---- Runs: the daily company, free play, a friend's challenge ---------------------------
+const EPOCH = Date.UTC(2026, 10, 12);
+function dayNumber(d = new Date()) { return Math.max(1, Math.floor((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - EPOCH) / 864e5) + 1); }
+const TODAY = dayNumber();
+function runFor(day, freeSeed) {
+  if (freeSeed) return { mode: 'free', seed: freeSeed, company: freeSeed % COMPANIES.length };
+  return { mode: 'daily', day, seed: 7919 * day + 13, company: (day * 7 + 3) % COMPANIES.length };
+}
+const challenge = (() => { // a trust boundary: everything here comes from someone else's link
+  if (!params.has('beat')) return null;
+  const beat = Math.round(Number(params.get('beat')));
+  if (!Number.isFinite(beat) || beat < -1e10 || beat > 1e12) return null;
+  const d = parseInt(params.get('d'), 10), s = parseInt(params.get('seed'), 10);
+  return { beat, by: cleanName(params.get('by')) || '?', run: s > 0 && s < 2 ** 31 ? runFor(0, s) : runFor(d > 0 && d < 1e5 ? d : TODAY) };
+})();
+let current = challenge ? challenge.run : (Number(params.get('seed')) > 0 ? runFor(0, Math.floor(Number(params.get('seed')))) : runFor(TODAY));
+let playerName = cleanName(store.get('name')) || '';
+const nameOrDefault = () => playerName || T('defaultName');
+
+// ---- Screen ---------------------------------------------------------------------------
+const chart = $('chart'), cctx = chart.getContext('2d');
+const faceC = $('face');
+const paper = $('paper');
+function fitCanvas(c) {
+  const r = c.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
+  const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr));
+  if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+  return { w: r.width, h: r.height, dpr };
+}
+
+// ---- Input: keys by position (event.code), OS key repeat ignored ------------------------
+const down = new Set(), hit = new Set();
+const pressed = code => hit.has(code);
+const enter = () => pressed('Enter') && !(document.activeElement && document.activeElement.tagName === 'BUTTON');
+const ui = { shred: false, dump: false };
+addEventListener('keydown', e => {
+  startAudio();
+  const typing = e.target && e.target.tagName === 'INPUT';
+  if (typing && e.code !== 'Enter') return;
+  if (!e.repeat) { down.add(e.code); hit.add(e.code); }
+  if ((e.code === 'Space' || e.code.startsWith('Arrow')) && scene !== 'results' && scene !== 'title') e.preventDefault();
+});
+addEventListener('keyup', e => { down.delete(e.code); if (e.code === 'Space' && (scene === 'play' || scene === 'ending')) e.preventDefault(); });
+addEventListener('pointerdown', () => startAudio());
+addEventListener('blur', () => { down.clear(); ui.shred = ui.dump = false; });
+document.addEventListener('visibilitychange', () => { if (document.hidden && scene === 'play') setScene('pause'); });
+
+// ---- Audio: started on first input, mute on M --------------------------------------------
+let audio = null, muted = store.get('muted') === '1';
+function startAudio() {
+  if (!audio) {
+    try {
+      const ac = window.GAME_AUDIO || new (window.AudioContext || window.webkitAudioContext)();
+      const out = ac.createGain(); out.gain.value = muted ? 0 : tune.volume; out.connect(ac.destination);
+      const buf = ac.createBuffer(1, ac.sampleRate, ac.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; // sound only, never gameplay
+      const amb = ac.createBufferSource(); amb.buffer = buf; amb.loop = true;
+      const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 420;
+      const ag = ac.createGain(); ag.gain.value = 0; amb.connect(lp).connect(ag).connect(out); amb.start();
+      audio = { ac, out, buf, amb: ag };
+    } catch (e) { audio = null; return; }
+  }
+  if (audio.ac.state === 'suspended') audio.ac.resume();
+}
+function setMuted(m) { muted = m; store.set('muted', m ? '1' : '0'); if (audio) audio.out.gain.value = m ? 0 : tune.volume; paintMute(); }
+function tone(freq, dur, type = 'square', vol = 0.3, when = 0, slideTo = 0) {
+  if (!audio || muted) return;
+  const t = audio.ac.currentTime + when, o = audio.ac.createOscillator(), g = audio.ac.createGain();
+  o.type = type; o.frequency.setValueAtTime(freq, t); if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
+  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  o.connect(g).connect(audio.out); o.start(t); o.stop(t + dur + 0.02);
+}
+function noise(dur, vol, freq, type = 'lowpass', when = 0) {
+  if (!audio || muted) return;
+  const ac = audio.ac, t = ac.currentTime + when, s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+  s.buffer = audio.buf; f.type = type; f.frequency.value = freq;
+  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  s.connect(f).connect(g).connect(audio.out); s.start(t, Math.random() * 0.5); s.stop(t + dur + 0.02);
+}
+const SFX = {
+  ring() { [0, 0.42].forEach(w => { tone(440, 0.32, 'sine', 0.09, w); tone(480, 0.32, 'sine', 0.09, w); }); },
+  cash() { noise(0.07, 0.25, 5000, 'highpass'); tone(1568, 0.1, 'square', 0.06, 0.03); tone(2093, 0.35, 'square', 0.05, 0.11); },
+  stamp() { tone(140, 0.16, 'sine', 0.45, 0, 45); noise(0.06, 0.3, 700); },
+  busy() { [0, 0.3].forEach(w => { tone(480, 0.16, 'sine', 0.08, w); tone(620, 0.16, 'sine', 0.08, w); }); },
+  fed() { tone(330, 0.6, 'sawtooth', 0.09, 0, 110); tone(110, 0.5, 'square', 0.08, 0.1); },
+  bell() { [0, 0.2, 0.4].forEach(w => { tone(1318, 0.9, 'sine', 0.13, w); tone(2637, 0.5, 'sine', 0.04, w); }); },
+  siren() { for (let i = 0; i < 4; i++) tone(650, 0.42, 'sawtooth', 0.07, i * 0.42, 1000); },
+  crash() { tone(900, 1.3, 'square', 0.1, 0, 40); noise(1.2, 0.12, 300); },
+  shred() { noise(0.13, 0.12, 1600, 'bandpass'); },
+  thump() { tone(62, 0.14, 'sine', 0.35); },
+  click() { tone(1200, 0.025, 'square', 0.04); },
+};
+
+// ---- Scenes ---------------------------------------------------------------------------
+let scene, state, deckUsed;
+function setScene(name) {
+  const prev = scene; scene = name;
+  const screen = { title: 's-title', play: 's-play', pause: 's-play', ending: 's-play', results: 's-results', figures: 's-figures' }[name];
+  ['s-title', 's-play', 's-results', 's-figures'].forEach(id => { $(id).hidden = id !== screen; });
+  $('pauseOv').hidden = name !== 'pause';
+  if (name !== 'ending') $('endOv').hidden = true;
+  if (name === 'title') paintTitle();
+  if (name === 'play' && prev !== 'pause') requestAnimationFrame(() => fitCanvas(chart));
+  if (name === 'results') paintResults();
+  if (name === 'figures') paintFigures();
+  if (audio) audio.amb.gain.setTargetAtTime(name === 'play' ? 0.05 : 0, audio.ac.currentTime, 0.3);
+  events.push({ t: state ? state.t : 0, type: 'scene', scene: name });
+}
+function reset() {
+  seed = current.seed;
+  deckUsed = {};
+  const co = COMPANIES[current.company];
+  state = {
+    t: 0, price: tune.startPrice, history: [tune.startPrice], peak: tune.startPrice, sampleT: 0,
+    heat: 0, combo: 0, calls: 0, closes: 0, lies: 0, smooths: 0, honests: 0, hangups: 0, narcsLied: 0, narcs: 0, whales: 0,
+    momScammed: false, momCalled: false, momAt: tune.dayLength * (0.35 + rng() * 0.3),
+    call: null, nextCallIn: 1.1, shredHold: 0, shredBags: 0, shredSfx: 0, dumpT: 0, beatT: 0, warned: false,
+    end: null, endT: 0, crashT: 0, co, score: 0, gained: '',
+  };
+}
+function start(run) {
+  if (run) current = run;
+  reset(); setScene('play'); paintStatic(); paintCall(); SFX.bell();
+  events.push({ t: 0, type: 'start', seed: current.seed });
+}
+
+// ---- The game --------------------------------------------------------------------------
+function pickFrom(key, list) { // no repeats until the pool is used up
+  const used = deckUsed[key] || (deckUsed[key] = new Set());
+  if (used.size >= list.length) used.clear();
+  let i; do { i = Math.floor(rng() * list.length); } while (used.has(i));
+  used.add(i); return list[i];
+}
+const lerp = (a, b, k) => a + (b - a) * Math.max(0, Math.min(1, k));
+function makeCall() {
+  const s = state, p = s.t / tune.dayLength;
+  let kind;
+  if (!s.momCalled && s.t >= s.momAt) { kind = 'mom'; s.momCalled = true; }
+  else if (s.narcs === 0 && s.t >= tune.narcFrom + 8) kind = 'narc'; // everyone meets one investigator early
+  else {
+    const narc = s.t >= tune.narcFrom ? tune.narcShare * lerp(0.6, 1.2, p) : 0;
+    const whale = s.t >= tune.whaleFrom ? tune.whaleShare : 0;
+    const x = rng();
+    kind = x < narc ? 'narc' : x < narc + whale ? 'whale' : (rng() < 0.5 ? 'greedy' : 'cautious');
+  }
+  if (kind === 'narc') s.narcs++;
+  const replies = kind === 'mom'
+    ? ['honest', 'smooth', 'lie'].map(type => ({ type, text: MOM_REPLIES[type] }))
+    : ['honest', 'smooth', 'lie'].map(type => ({ type, text: pickFrom('r' + type, REPLIES[type]) }));
+  for (let i = replies.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [replies[i], replies[j]] = [replies[j], replies[i]]; }
+  const ages = AGES[kind];
+  const patience = lerp(tune.patienceStart, tune.patienceEnd, p) * (kind === 'whale' ? tune.whalePatience : 1);
+  s.call = {
+    kind, replies, patience, max: patience, face: Math.floor(rng() * 1e9),
+    name: kind === 'mom' ? null : kind === 'narc' ? pickFrom('mike', MIKES) : pickFrom('name', NAMES),
+    age: ages ? ages[0] + Math.floor(rng() * (ages[1] - ages[0])) : 0,
+    job: kind === 'mom' ? null : pickFrom('job' + kind, JOBS[kind]),
+    line: pickFrom('line' + kind, LINES[kind]),
+  };
+  s.calls++;
+  SFX.ring(); paintCall();
+  events.push({ t: s.t, type: 'call', kind });
+}
+function addHeat(v) { state.heat = Math.max(0, state.heat + v); }
+function answer(i) {
+  const s = state, c = s.call;
+  if (scene !== 'play' || !c || s.shredHold > 0) return;
+  const rep = c.replies[i]; if (!rep) return;
+  s.call = null; s.nextCallIn = tune.callGap;
+  const type = rep.type, cap = w => w[0].toUpperCase() + w.slice(1);
+  s[type === 'lie' ? 'lies' : type === 'smooth' ? 'smooths' : 'honests']++;
+  events.push({ t: s.t, type: 'answer', kind: c.kind, reply: type });
+  if (c.kind === 'mom') {
+    if (type === 'honest') { addHeat(-15); fxFloat(T('momHonest'), false); }
+    else if (type === 'smooth') fxFloat(T('momSmooth'), false);
+    else { s.momScammed = true; addHeat(5); s.price *= 1.01; fxFloat(T('momLie'), true); }
+    SFX.click(); paintCall(); return;
+  }
+  const odds = c.kind === 'narc' ? 1 : tune['odds' + cap(c.kind) + cap(type)];
+  if (rng() < odds) {
+    const base = { honest: tune.gainHonest, smooth: tune.gainSmooth, lie: tune.gainLie }[type];
+    const mult = (c.kind === 'whale' ? tune.whaleMult : 1) * (1 + Math.min(s.combo, tune.comboMax) * tune.comboStep);
+    const gain = base * mult;
+    s.price *= 1 + gain; s.peak = Math.max(s.peak, s.price); s.combo++; s.closes++;
+    if (c.kind === 'narc') {
+      if (type === 'lie') { s.narcsLied++; addHeat(tune.heatNarcLie); fxStamp(T('fed'), 'blue'); fxFloat(T('quipFed'), true); SFX.fed(); shake(); }
+      else if (type === 'smooth') { addHeat(tune.heatNarcSmooth); fxStamp(T('sold')); SFX.stamp(); }
+      else { addHeat(tune.heatNarcHonest); fxStamp(T('clean'), 'green'); fxFloat(T('quipClean'), false); SFX.stamp(); }
+    } else {
+      addHeat(type === 'lie' ? tune.heatLie : type === 'smooth' ? tune.heatSmooth : 0);
+      if (c.kind === 'whale') { s.whales++; fxStamp(T('whale'), 'green'); } else fxStamp(T('sold'));
+      SFX.stamp(); SFX.cash(); if (type === 'lie') shake();
+    }
+    fxFloat('+' + Math.round(gain * 100) + ' %', false, true);
+  } else {
+    s.combo = 0;
+    if (c.kind === 'cautious' && type === 'lie') { addHeat(tune.heatFail); fxFloat(T('quipBBB'), true); }
+    else fxFloat(type === 'honest' && c.kind === 'greedy' ? T('quipBoring') : T('quipClick'), true);
+    fxStamp(T('hungup'), 'blue'); SFX.busy();
+  }
+  paintCall();
+}
+function endRun(kind) {
+  const s = state, cost = tune.startPrice * tune.shares;
+  const payout = kind === 'dump' ? s.price * (1 - tune.slippage) * tune.shares : 0;
+  s.end = { kind, price: s.price, paper: s.price * tune.shares, payout, profit: payout - cost, histLen: s.history.length };
+  s.score = Math.round(payout); // the take: what a friend has to beat
+  s.gained = kind;
+  s.call = null; s.endT = 0;
+  ui.shred = ui.dump = false;
+  const ov = $('endOv'); ov.className = 'overlay ' + kind; ov.hidden = false;
+  $('endText').textContent = T(kind === 'dump' ? 'endDump' : kind === 'raid' ? 'endRaid' : 'endHalt');
+  if (kind === 'dump') SFX.crash(); else if (kind === 'raid') SFX.siren(); else SFX.bell();
+  if (current.mode === 'daily') { const k = 'best-' + current.day, b = store.get(k); if (b === null || Number(b) < s.score) store.set(k, String(s.score)); }
+  events.push({ t: s.t, type: 'end', kind, score: s.score });
+  setScene('ending'); paintCall();
+}
+const scenes = {
+  figures: { update() {} },
+  title: { update() { if (enter()) { readName(); start(challenge ? challenge.run : current); } } },
+  play: {
+    update(dt) {
+      const s = state;
+      if (pressed('KeyP') || pressed('Escape')) { setScene('pause'); return; }
+      for (const [code, i] of [['Digit1', 0], ['Digit2', 1], ['Digit3', 2], ['Numpad1', 0], ['Numpad2', 1], ['Numpad3', 2]]) if (pressed(code)) answer(i);
+      s.t += dt;
+      s.price *= Math.exp(-tune.drift * dt);
+      s.sampleT += dt;
+      if (s.sampleT >= 0.25) { s.sampleT -= 0.25; s.price = Math.max(0.004, s.price * (1 + (rng() - 0.5) * 2 * tune.noise)); s.history.push(s.price); }
+      addHeat(tune.heatDrip * dt);
+      // shred: hold, one bag at a time, each slower than the last
+      const shredding = (down.has('KeyS') || ui.shred) && s.heat > 0;
+      if (shredding) {
+        s.shredHold += dt; s.shredSfx -= dt; if (s.shredSfx <= 0) { SFX.shred(); s.shredSfx = 0.16; }
+        if (s.shredHold >= tune.shredTime + s.shredBags * tune.shredGrow) { addHeat(-tune.shredAmount); s.shredBags++; s.shredHold = 0; fxFloat(T('shredded') + ' −' + tune.shredAmount, false); events.push({ t: s.t, type: 'shred' }); }
+      } else s.shredHold = 0;
+      // the phone
+      if (s.call) {
+        s.call.patience -= dt;
+        if (s.call.patience <= 0) { s.call = null; s.combo = 0; s.hangups++; s.nextCallIn = tune.callGap; fxStamp(T('hungup'), 'blue'); SFX.busy(); paintCall(); }
+      } else { s.nextCallIn -= dt; if (s.nextCallIn <= 0) makeCall(); }
+      // the dump: hold
+      if (down.has('KeyD') || down.has('Space') || ui.dump) { s.dumpT += dt; if (s.dumpT >= tune.dumpHold) { endRun('dump'); return; } }
+      else s.dumpT = Math.max(0, s.dumpT - dt * 3);
+      // the walls closing in
+      if (s.heat >= tune.heatWarn) { s.beatT -= dt; if (s.beatT <= 0) { SFX.thump(); s.beatT = lerp(0.9, 0.35, (s.heat - tune.heatWarn) / (100 - tune.heatWarn)); } }
+      if (s.heat >= 100) endRun('raid');
+      else if (s.t >= tune.dayLength) endRun('halt');
+    },
+  },
+  pause: { update() { if (pressed('KeyP') || pressed('Escape') || enter()) setScene('play'); } },
+  ending: {
+    update(dt) {
+      const s = state; s.endT += dt;
+      if (s.end.kind === 'dump') { s.crashT += dt; if (s.crashT >= 0.05 && s.price > s.end.price * 0.06) { s.crashT = 0; s.price = Math.max(s.end.price * 0.06, s.price * 0.86); s.history.push(s.price); } }
+      if (s.endT >= 1.9) setScene('results');
+    },
+  },
+  results: { update() { if (enter() || pressed('KeyR')) start(current); } },
+};
+
+// ---- Drawing: the chart ---------------------------------------------------------------
+function drawChart() {
+  const { w, h, dpr } = fitCanvas(chart), g = cctx, s = state;
+  g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+  const pts = s.history.concat(scene === 'ending' ? [] : [s.price]);
+  const N = Math.max(tune.dayLength * 4 + 2, pts.length + 1);
+  const lo = Math.min(tune.startPrice * 0.5, ...pts) * 0.9, hi = Math.max(tune.startPrice * 4, s.peak * 1.35);
+  const top = 34, bot = 22, right = 64, L0 = Math.log(lo), L1 = Math.log(hi);
+  const X = i => (i / (N - 1)) * (w - right), Y = p => top + (1 - (Math.log(p) - L0) / (L1 - L0)) * (h - top - bot);
+  // price ticks in pencil
+  g.font = '16px "Patrick Hand", cursive'; g.fillStyle = '#5f4f2c'; g.textAlign = 'left'; g.textBaseline = 'middle';
+  for (const v of [0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 25, 50]) {
+    if (v < lo || v > hi) continue; const y = Y(v); if (y < top - 4 || y > h - bot) continue;
+    g.fillText(fmtPrice(v), w - right + 8, y);
+  }
+  // the opening price, dashed
+  g.strokeStyle = 'rgba(95,79,44,.55)'; g.lineWidth = 1.5; g.setLineDash([6, 6]);
+  g.beginPath(); g.moveTo(0, Y(tune.startPrice)); g.lineTo(w - right, Y(tune.startPrice)); g.stroke(); g.setLineDash([]);
+  // hatch under the line: green above the open, red below
+  const up = s.price >= tune.startPrice;
+  g.save(); g.beginPath(); g.moveTo(X(0), h - bot);
+  pts.forEach((p, i) => g.lineTo(X(i), Y(p))); g.lineTo(X(pts.length - 1), h - bot); g.closePath(); g.clip();
+  g.strokeStyle = up ? 'rgba(46,122,58,.22)' : 'rgba(200,38,27,.2)'; g.lineWidth = 2;
+  for (let x = -h; x < w; x += 12) { g.beginPath(); g.moveTo(x, h); g.lineTo(x + h, 0); g.stroke(); }
+  g.restore();
+  // the felt-tip line, a little shaky
+  g.strokeStyle = '#1c1714'; g.lineWidth = 4; g.lineJoin = g.lineCap = 'round';
+  g.beginPath(); pts.forEach((p, i) => { const j = (Math.sin(i * 12.9898) * 43758.5453 % 1) * 1.2; i ? g.lineTo(X(i), Y(p) + j) : g.moveTo(X(i), Y(p)); }); g.stroke();
+  // the pen tip and the price
+  const lx = X(pts.length - 1), ly = Y(pts[pts.length - 1]);
+  g.fillStyle = '#c8261b'; g.beginPath(); g.arc(lx, ly, 6, 0, Math.PI * 2); g.fill();
+  // time labels
+  g.fillStyle = '#5f4f2c'; g.font = '16px "Patrick Hand", cursive'; g.textBaseline = 'alphabetic';
+  g.textAlign = 'left'; g.fillText('09:30', 0, h - 4); g.textAlign = 'right'; g.fillText('16:00', w - right, h - 4);
+}
+// ---- Drawing: callers as ballpoint doodles --------------------------------------------
+const SKIN = ['#f2cba6', '#e2ae80', '#c68a5e', '#8f5b3a', '#5e3a26'];
+const HAIR = ['#2a1a10', '#5a3a1e', '#a0672f', '#d9b26a', '#7a2e1a', '#1c1c1c'];
+const GREY = ['#b9b7b0', '#e6e3da', '#9a968c'];
+function drawFace(c, kind, fseed) {
+  const g = c.getContext('2d'), Z = c.width / 200, R = mulberry(fseed);
+  const wob = n => (R() - 0.5) * n;
+  g.setTransform(Z, 0, 0, Z, 0, 0); g.clearRect(0, 0, 200, 200);
+  g.lineCap = g.lineJoin = 'round'; g.lineWidth = 3.4;
+  const ink = '#24408f', black = '#1c1714';
+  const skin = SKIN[Math.floor(R() * SKIN.length)];
+  const hair = kind === 'cautious' || kind === 'mom' ? GREY[Math.floor(R() * GREY.length)] : HAIR[Math.floor(R() * HAIR.length)];
+  const fw = 40 + R() * 9, fh = 50 + R() * 7, cx = 100 + wob(4), cy = 102;
+  const blob = (x, y, rx, ry, j, f, st = ink) => { // a hand-drawn ellipse
+    g.beginPath(); const n = 22;
+    for (let i = 0; i <= n; i++) { const a = (i / n) * Math.PI * 2, k = 1 + (i % n ? wob(j) : 0); const px = x + Math.cos(a) * rx * k, py = y + Math.sin(a) * ry * k; i ? g.lineTo(px, py) : g.moveTo(px, py); }
+    g.closePath(); if (f) { g.fillStyle = f; g.fill(); } if (st) { g.strokeStyle = st; g.stroke(); }
+  };
+  const line = (pts, st = ink, lw = 3.4) => { g.beginPath(); g.strokeStyle = st; g.lineWidth = lw; pts.forEach(([x, y], i) => (i ? g.lineTo(x + wob(1.5), y + wob(1.5)) : g.moveTo(x, y))); g.stroke(); g.lineWidth = 3.4; };
+  // body: what they wear says who they are
+  const body = { greedy: '#e08a2a', cautious: '#8c7a55', narc: '#3b414d', whale: '#1d1d22', mom: '#e79ab1' }[kind];
+  g.beginPath(); g.moveTo(cx - 78, 200); g.quadraticCurveTo(cx - 70, 150 + wob(4), cx, 146); g.quadraticCurveTo(cx + 70, 150 + wob(4), cx + 78, 200); g.closePath();
+  g.fillStyle = body; g.fill(); g.strokeStyle = ink; g.stroke();
+  // neck
+  g.fillStyle = skin; g.fillRect(cx - 14, cy + fh - 12, 28, 26); line([[cx - 14, cy + fh - 10], [cx - 14, cy + fh + 14]]); line([[cx + 14, cy + fh - 10], [cx + 14, cy + fh + 14]]);
+  if (kind === 'greedy') { // open collar and a gold chain
+    line([[cx - 22, 150], [cx, 178], [cx + 22, 150]]);
+    g.strokeStyle = '#d4a514'; g.lineWidth = 4; g.beginPath(); g.moveTo(cx - 20, 154); g.quadraticCurveTo(cx, 182, cx + 20, 154); g.stroke(); g.lineWidth = 3.4;
+    blob(cx, 176, 6, 6, 0.1, '#e8c13a', '#a07c10');
+  } else if (kind === 'cautious') { // cardigan buttons
+    line([[cx, 150], [cx, 200]]); for (const y of [164, 182]) blob(cx + 8, y, 3, 3, 0.1, '#f3ead8');
+  } else if (kind === 'narc') { // white shirt, thin tie
+    g.beginPath(); g.moveTo(cx - 18, 148); g.lineTo(cx, 200); g.lineTo(cx + 18, 148); g.fillStyle = '#f4f2ec'; g.fill(); g.strokeStyle = ink; g.stroke();
+    g.beginPath(); g.moveTo(cx - 5, 152); g.lineTo(cx + 5, 152); g.lineTo(cx + 4, 196); g.lineTo(cx - 4, 196); g.closePath(); g.fillStyle = '#7a1f1f'; g.fill(); g.stroke();
+  } else if (kind === 'whale') { // bow tie
+    g.beginPath(); g.moveTo(cx, 156); g.lineTo(cx - 20, 146); g.lineTo(cx - 20, 166); g.closePath(); g.moveTo(cx, 156); g.lineTo(cx + 20, 146); g.lineTo(cx + 20, 166); g.closePath();
+    g.fillStyle = '#b8222a'; g.fill(); g.stroke();
+  } else { // mom: an apron strap and a pearl string
+    for (let i = -3; i <= 3; i++) blob(cx + i * 7, 160 + Math.abs(i) * -2.2, 3, 3, 0.1, '#fbf6ee');
+  }
+  // ears
+  blob(cx - fw - 2, cy + 4, 8, 12, 0.15, skin); blob(cx + fw + 2, cy + 4, 8, 12, 0.15, skin);
+  // head
+  blob(cx, cy, fw, fh, 0.05, skin);
+  // hair
+  g.fillStyle = hair; g.strokeStyle = ink;
+  if (kind === 'narc') { // short crew cut, close to the head
+    g.fillStyle = ['#1c1c1c', '#2a1a10', '#4a3420'][Math.floor(R() * 3)];
+    g.beginPath(); g.moveTo(cx - fw + 1, cy - fh * 0.42); g.quadraticCurveTo(cx - fw + 2, cy - fh - 2, cx, cy - fh - 3); g.quadraticCurveTo(cx + fw - 2, cy - fh - 2, cx + fw - 1, cy - fh * 0.42);
+    g.quadraticCurveTo(cx, cy - fh * 0.7, cx - fw + 1, cy - fh * 0.42); g.fill(); g.stroke();
+    for (let i = -3; i <= 3; i++) line([[cx + i * 9, cy - fh + 2], [cx + i * 9 + 1, cy - fh * 0.78]], 'rgba(255,255,255,.25)', 1.5);
+  } else if (kind === 'whale') { // slicked back swoop
+    g.beginPath(); g.moveTo(cx - fw, cy - 10); g.quadraticCurveTo(cx - fw - 10, cy - fh - 22, cx + 10, cy - fh - 14); g.quadraticCurveTo(cx + fw + 14, cy - fh, cx + fw, cy - 12);
+    g.quadraticCurveTo(cx + 6, cy - fh * 0.8, cx - fw, cy - 10); g.fill(); g.stroke();
+    line([[cx - 20, cy - fh - 6], [cx + 18, cy - fh * 0.75]], 'rgba(255,255,255,.5)', 2);
+  } else if (kind === 'mom') { // curls and curlers
+    for (let i = 0; i < 7; i++) { const a = Math.PI + (i / 6) * Math.PI; blob(cx + Math.cos(a) * fw * 0.95, cy - 6 + Math.sin(a) * fh * 0.95, 14, 12, 0.2, hair); }
+    for (let i = 0; i < 4; i++) { const x = cx - 30 + i * 20, y = cy - fh - 4 + (i % 2) * 6; g.fillStyle = ['#7fb3e8', '#f2a3c0', '#f3d36b', '#9fd49a'][i]; g.fillRect(x - 8, y - 6, 16, 12); g.strokeRect(x - 8, y - 6, 16, 12); }
+  } else if (kind === 'cautious') { // perm or bald with tufts
+    if (R() < 0.5) { for (let i = 0; i < 6; i++) { const a = Math.PI * 1.05 + (i / 5) * Math.PI * 0.9; blob(cx + Math.cos(a) * fw * 0.9, cy - 10 + Math.sin(a) * fh * 0.9, 13, 11, 0.25, hair); } }
+    else { blob(cx - fw + 4, cy - 12, 9, 12, 0.3, hair); blob(cx + fw - 4, cy - 12, 9, 12, 0.3, hair); }
+  } else { // greedy: mullet or comb-over
+    g.beginPath(); g.moveTo(cx - fw - 2, cy + 18); g.quadraticCurveTo(cx - fw - 8, cy - fh - 10, cx, cy - fh - 6); g.quadraticCurveTo(cx + fw + 8, cy - fh - 10, cx + fw + 2, cy + 18);
+    g.quadraticCurveTo(cx + fw - 4, cy - fh * 0.6, cx, cy - fh * 0.62); g.quadraticCurveTo(cx - fw + 4, cy - fh * 0.6, cx - fw - 2, cy + 18); g.fill(); g.stroke();
+  }
+  // brows and eyes
+  const ey = cy - 4, ex = 16 + R() * 4;
+  const worried = kind === 'cautious' || kind === 'mom', stern = kind === 'narc';
+  line([[cx - ex - 9, ey - 12 + (worried ? 4 : 0)], [cx - ex + 8, ey - 13 - (worried ? 3 : 0) + (stern ? 4 : 0)]], black);
+  line([[cx + ex - 8, ey - 13 - (worried ? 3 : 0) + (stern ? 4 : 0)], [cx + ex + 9, ey - 12 + (worried ? 4 : 0)]], black);
+  blob(cx - ex, ey, 3.5, 4, 0.1, black, null); blob(cx + ex, ey, 3.5, 4, 0.1, black, null);
+  if (kind === 'cautious') { blob(cx - ex, ey, 11, 9, 0.05, null, black); blob(cx + ex, ey, 11, 9, 0.05, null, black); line([[cx - ex + 11, ey], [cx + ex - 11, ey]], black); line([[cx - ex - 11, ey], [cx - fw - 4, ey + 30], [cx - fw + 2, cy + fh + 10]], '#a07c10', 1.5); }
+  if (kind === 'whale' && R() < 0.5) { g.fillStyle = '#1c1714'; g.fillRect(cx - ex - 12, ey - 7, 24, 13); g.fillRect(cx + ex - 12, ey - 7, 24, 13); line([[cx - ex + 12, ey - 3], [cx + ex - 12, ey - 3]], black); }
+  // nose
+  line([[cx + wob(3), ey + 6], [cx - 6 + wob(3), ey + 22], [cx + 4, ey + 24]]);
+  // mouth
+  const my = cy + fh * 0.5;
+  if (kind === 'greedy') { g.beginPath(); g.moveTo(cx - 18, my - 4); g.quadraticCurveTo(cx, my + 14, cx + 18, my - 4); g.closePath(); g.fillStyle = '#fbf6ee'; g.fill(); g.strokeStyle = black; g.stroke(); }
+  else if (kind === 'narc') line([[cx - 13, my], [cx + 13, my]], black);
+  else if (kind === 'whale') { line([[cx - 12, my + 2], [cx + 10, my - 2]], black); }
+  else if (kind === 'mom') { g.beginPath(); g.moveTo(cx - 14, my - 2); g.quadraticCurveTo(cx, my + 9, cx + 14, my - 2); g.strokeStyle = black; g.stroke(); }
+  else line([[cx - 12, my + 2], [cx - 4, my - 1], [cx + 4, my + 2], [cx + 12, my - 1]], black);
+  if (kind === 'greedy' && R() < 0.6) line([[cx - 16, my - 9], [cx - 4, my - 12], [cx + 4, my - 12], [cx + 16, my - 9]], hair, 5); // mustache
+  // the whale's cigar
+  if (kind === 'whale') { g.save(); g.translate(cx + 10, my); g.rotate(-0.15); g.fillStyle = '#6b3d1e'; g.fillRect(0, -4, 34, 9); g.strokeStyle = ink; g.strokeRect(0, -4, 34, 9); g.fillStyle = '#d9d2c3'; g.fillRect(31, -4, 5, 9); g.restore(); line([[cx + 48, my - 10], [cx + 44, my - 22], [cx + 52, my - 32], [cx + 46, my - 44]], '#9a968c', 2); }
+  // the narc's earpiece: a coiled wire you can spot
+  if (kind === 'narc') { blob(cx - fw - 3, cy + 6, 4, 4, 0.1, '#e6e3da', black); g.strokeStyle = '#1c1714'; g.lineWidth = 1.6; g.beginPath(); for (let i = 0; i <= 26; i++) { const yy = cy + 10 + i * 2.2; g.lineTo(cx - fw - 3 + Math.sin(i * 1.4) * 3, yy); } g.stroke(); g.lineWidth = 3.4; }
+  // the phone at the right ear, cord curling down
+  g.save(); g.translate(cx + fw + 6, cy + 4); g.rotate(0.35);
+  g.fillStyle = kind === 'whale' ? '#f2f0ea' : '#c8261b'; g.beginPath(); g.moveTo(-8, -34); g.quadraticCurveTo(10, -36, 10, -20); g.lineTo(6, 22); g.quadraticCurveTo(4, 36, -10, 34); g.quadraticCurveTo(-2, 0, -8, -34); g.fill(); g.strokeStyle = ink; g.stroke();
+  g.restore();
+  g.strokeStyle = '#c8261b'; g.lineWidth = 2; g.beginPath(); for (let i = 0; i <= 30; i++) g.lineTo(cx + fw + 4 + Math.sin(i * 1.2) * 5 + i * 0.6, cy + 40 + i * 2.6); g.stroke();
+}
+
+// ---- Drawing: the front page ------------------------------------------------------------
+function wrap(g, text, maxW) {
+  const words = text.split(' '), lines = []; let ln = '';
+  for (const w of words) { const t = ln ? ln + ' ' + w : w; if (g.measureText(t).width > maxW && ln) { lines.push(ln); ln = w; } else ln = t; }
+  if (ln) lines.push(ln); return lines;
+}
+function headlineFor(e) {
+  const s = state, co = s.co;
+  const v = { name: nameOrDefault(), ticker: '$' + co[2], company: L(co), payout: fmtMoney(e.payout), paper: fmtMoney(e.paper), drop: Math.round((1 - s.price / e.price) * 100), n: s.narcsLied, shares: fmtInt(tune.shares) };
+  let key;
+  if (e.kind === 'dump') key = Math.round(e.price * 100) === 420 ? 'hl420' : e.profit < 0 ? 'hlDumpLoss' : e.profit < 2.5e5 ? 'hlDumpSmall' : e.profit < 1.5e6 ? 'hlDumpMid' : 'hlDumpBig';
+  else if (e.kind === 'raid') key = s.narcsLied > 0 ? 'hlRaidNarc' : 'hlRaid';
+  else key = 'hlHalt';
+  return S[lang][key].map(x => fill(x, v));
+}
+function rankFor(e) {
+  if (e.kind === 'raid') return T('rankRaid', { n: 10000 + (current.seed * 7 + state.calls * 131) % 89999 });
+  if (e.kind === 'halt') return T('rankHalt');
+  const p = e.profit, r = S[lang].ranks;
+  return p < 0 ? r[0] : p < 1e5 ? r[1] : p < 5e5 ? r[2] : p < 1.5e6 ? r[3] : p < 4e6 ? r[4] : r[5];
+}
+function drawPaper(c) {
+  const g = c.getContext('2d'), W = 1080, H = 1350, s = state, e = s.end, co = s.co;
+  const news = '#e9e8e3', ink = '#151311', red = '#c8261b', grey = '#5f5c55', M = 44, FOOT = 112;
+  g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = news; g.fillRect(0, 0, W, H); g.textBaseline = 'alphabetic';
+  // masthead and dateline
+  g.fillStyle = red; g.fillRect(0, 0, W, 168);
+  g.fillStyle = '#fff8ef'; g.font = '700 126px Antonio'; g.textAlign = 'center'; g.fillText('THE DAILY DUMP', W / 2, 138);
+  const now = new Date(), d87 = new Date(1987, now.getMonth(), now.getDate()).toLocaleDateString(LOC(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  g.fillStyle = ink; g.font = '400 30px Antonio'; g.textAlign = 'left'; g.fillText('New York, ' + d87, M, 210);
+  g.textAlign = 'right'; g.fillText(T('edition', { n: current.mode === 'daily' ? current.day : '#' + current.seed }), W - M, 210);
+  g.fillRect(M, 226, W - 2 * M, 4); g.fillRect(M, 236, W - 2 * M, 1.5);
+  // headline, two lines at most, then the standfirst
+  const [head, sub] = headlineFor(e);
+  let size = 136, lines;
+  for (;; size -= 4) { g.font = `700 ${size}px Antonio`; lines = wrap(g, head.toUpperCase(), W - 2 * M); if ((lines.length <= 2 && lines.every(l => g.measureText(l).width <= W - 2 * M)) || size <= 64) break; }
+  g.textAlign = 'left'; g.fillStyle = ink; let y = 240 + size * 0.9;
+  lines.slice(0, 3).forEach((l, i) => { g.fillText(l, M, y); if (i < Math.min(3, lines.length) - 1) y += size * 0.93; });
+  g.font = '400 38px Antonio'; g.fillStyle = '#2b2824'; y += 66;
+  wrap(g, sub, W - 2 * M).slice(0, 2).forEach(l => { g.fillText(l, M, y); y += 46; });
+  const top = y + 6, bt = top + 26, bottom = H - FOOT - 26;
+  g.fillStyle = ink; g.fillRect(M, top, W - 2 * M, 2);
+  // left: the chart as a halftone press photo, caption, title of the day
+  const px = M, pw = 590, py = bt, ph = Math.max(240, bottom - bt - 150);
+  g.fillStyle = '#cfcdc6'; g.fillRect(px, py, pw, ph);
+  g.fillStyle = 'rgba(0,0,0,.08)'; for (let yy = py + 4; yy < py + ph; yy += 8) for (let xx = px + 4 + ((yy - py) / 8 % 2) * 4; xx < px + pw; xx += 8) { g.beginPath(); g.arc(xx, yy, 1.6, 0, 7); g.fill(); }
+  const pts = s.history, lo = Math.min(...pts) * 0.9, hi = Math.max(...pts) * 1.15, L0 = Math.log(lo), L1 = Math.log(hi);
+  const X = i => px + 24 + (i / Math.max(1, pts.length - 1)) * (pw - 48), Y = p => py + 24 + (1 - (Math.log(p) - L0) / (L1 - L0)) * (ph - 48);
+  g.strokeStyle = ink; g.lineWidth = 6; g.lineJoin = g.lineCap = 'round'; g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(X(i), Y(p)) : g.moveTo(X(i), Y(p)))); g.stroke();
+  g.save(); g.translate(px + pw - 160, py + 70); g.rotate(-0.16);
+  g.font = '700 62px Antonio'; const st = T(e.kind === 'dump' ? 'stampDump' : e.kind === 'raid' ? 'stampRaid' : 'stampHalt').toUpperCase(), sw = g.measureText(st).width + 36;
+  g.fillStyle = 'rgba(233,232,227,.75)'; g.fillRect(-sw / 2, -46, sw, 76); g.strokeStyle = red; g.lineWidth = 7; g.strokeRect(-sw / 2, -46, sw, 76); g.fillStyle = red; g.textAlign = 'center'; g.fillText(st, 0, 16); g.restore();
+  g.textAlign = 'left'; g.fillStyle = grey; g.font = '400 26px Antonio'; g.fillText(T('chartCap', { ticker: '$' + co[2], company: L(co) }), px, py + ph + 34);
+  g.fillText(T('rankLabel'), px, py + ph + 82);
+  let rs = 48; const rank = rankFor(e); g.font = `700 ${rs}px Antonio`; while (g.measureText(rank).width > pw && rs > 28) { rs -= 2; g.font = `700 ${rs}px Antonio`; }
+  g.fillStyle = ink; g.fillText(rank, px, py + ph + 82 + rs + 4);
+  // right: the number and the record
+  const rx = px + pw + 36, rw = W - M - rx; let ry = bt + 24;
+  g.fillStyle = grey; g.font = '400 28px Antonio'; g.fillText(e.kind === 'dump' ? T('take_') : T('onPaper'), rx, ry);
+  const bigTxt = fmtMoney(e.kind === 'dump' ? e.payout : e.paper); let bs = 84; g.font = `700 ${bs}px Antonio`; while (g.measureText(bigTxt).width > rw && bs > 40) { bs -= 4; g.font = `700 ${bs}px Antonio`; }
+  g.fillStyle = e.kind === 'dump' ? ink : red; ry += bs + 4; g.fillText(bigTxt, rx, ry);
+  if (e.kind !== 'dump') { g.fillStyle = ink; g.fillRect(rx, ry - bs * 0.36, Math.min(rw, g.measureText(bigTxt).width), 6); }
+  ry += 18;
+  const rows = [[T('calls'), fmtInt(s.calls)], [T('closes'), fmtInt(s.closes)], [T('lies'), fmtInt(s.lies)], [T('peak'), fmtPrice(s.peak)]];
+  if (s.narcsLied) rows.push([T('fedsLied'), fmtInt(s.narcsLied)]);
+  g.font = '400 31px Antonio';
+  for (const [k, v] of rows) { g.fillStyle = ink; g.fillRect(rx, ry, rw, 1.5); ry += 40; g.fillStyle = grey; g.textAlign = 'left'; g.fillText(k, rx, ry); g.fillStyle = ink; g.textAlign = 'right'; g.fillText(v, rx + rw, ry); ry += 10; }
+  g.textAlign = 'left'; g.fillStyle = ink; g.fillRect(rx, ry, rw, 4); ry += 44;
+  if (s.momScammed) { g.fillStyle = red; g.font = '700 30px Antonio'; for (const l of wrap(g, T('momScam'), rw).slice(0, 3)) { g.fillText(l, rx, ry); ry += 36; } }
+  // footer band
+  g.fillStyle = red; g.fillRect(0, H - FOOT - 8, W, 8);
+  g.fillStyle = ink; g.fillRect(0, H - FOOT, W, FOOT);
+  g.fillStyle = '#fff8ef'; g.font = '700 40px Antonio'; g.textAlign = 'center'; g.fillText(T('footer'), W / 2, H - 42);
+}
+
+// ---- Painting the DOM ---------------------------------------------------------------------
+const setText = (el, v) => { if (el.textContent !== v) el.textContent = v; };
+function applyWords() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-t]').forEach(el => setText(el, T(el.dataset.t)));
+  paintMute();
+}
+function paintMute() { const t = muted ? T('soundOff') : T('soundOn'); setText($('muteBtn'), t); setText($('muteBtnT'), t); $('muteBtn').setAttribute('aria-pressed', String(!muted)); }
+function readName() { playerName = cleanName($('nameIn').value); store.set('name', playerName); }
+function paintTitle() {
+  applyWords();
+  const co = COMPANIES[current.company];
+  $('today').innerHTML = T('today', { company: escapeHtml(L(co)), ticker: '$' + co[2] });
+  $('nameIn').value = playerName; $('nameIn').placeholder = T('defaultName');
+  setText($('startBtn'), challenge ? T('take') : current.mode === 'daily' ? T('play', { n: current.day }) : T('free'));
+  drawFace($('titleFace'), 'greedy', 4711);
+  const cb = $('challengeBox');
+  if (challenge) { cb.hidden = false; cb.textContent = T('challenge', { by: challenge.by, ticker: '$' + COMPANIES[challenge.run.company][2], v: fmtMoney(challenge.beat) }); }
+  const b = store.get('best-' + TODAY);
+  $('bestLine').hidden = b === null; if (b !== null) $('bestLine').textContent = T('best', { n: TODAY, v: fmtMoney(Number(b)) });
+}
+function escapeHtml(s) { return s.replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])); }
+function paintStatic() {
+  applyWords();
+  const co = state.co; setText($('hTick'), '$' + co[2]); setText($('hCo'), L(co));
+  $('heatMark').style.left = tune.heatWarn + '%';
+}
+function paintCall() {
+  const c = state.call, btns = $('replies').children;
+  $('caller').style.visibility = c ? 'visible' : 'hidden';
+  if (!c) {
+    $('cSay').innerHTML = '<span class="ringing">' + escapeHtml(T('ringing')) + '</span>';
+    for (const b of btns) { b.disabled = true; b.querySelector('.txt').textContent = ''; b.querySelector('.tag').textContent = ''; }
+    return;
+  }
+  drawFace(faceC, c.kind, c.face);
+  setText($('cWho'), c.kind === 'mom' ? T('figNames').mom : c.name + ', ' + c.age);
+  setText($('cJob'), c.kind === 'mom' ? '' : L(c.job));
+  $('cSay').textContent = lang === 'de' ? '„' + L(c.line) + '“' : '"' + L(c.line) + '"';
+  c.replies.forEach((r, i) => {
+    const b = btns[i]; b.disabled = false;
+    const tag = b.querySelector('.tag'); tag.textContent = T(r.type); tag.className = 'tag tag-' + r.type;
+    b.querySelector('.txt').textContent = L(r.text);
+  });
+}
+function paintHud() {
+  const s = state, chg = s.price / tune.startPrice - 1;
+  setText($('hPrice'), fmtPrice(s.price));
+  const ce = $('hChg'); setText(ce, (chg >= 0 ? '+' : '−') + Math.abs(Math.round(chg * 100)) + ' %'); ce.className = 'chg ' + (chg >= 0 ? 'up' : 'down');
+  const m = 570 + Math.min(1, s.t / tune.dayLength) * 390; setText($('hClock'), String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(Math.floor(m % 60)).padStart(2, '0'));
+  setText($('hBag'), T('bag', { v: fmtMoney(s.price * tune.shares) })); setText($('hCombo'), s.combo >= 2 ? T('combo', { n: s.combo }) : '');
+  const h = Math.min(100, s.heat); setText($('hHeat'), Math.round(h) + ' %');
+  $('heatFill').style.transform = `scaleX(${h / 100})`; $('heatMeter').setAttribute('aria-valuenow', String(Math.round(h)));
+  const warn = s.heat >= tune.heatWarn; document.body.classList.toggle('warn', warn); setText($('warnLine'), warn ? T('warn') : '');
+  $('cPat').style.transform = `scaleX(${s.call ? Math.max(0, s.call.patience / s.call.max) : 0})`;
+  $('shredFill').style.transform = `scaleX(${s.shredHold / (tune.shredTime + s.shredBags * tune.shredGrow)})`;
+  $('dumpFill').style.transform = `scaleX(${Math.min(1, s.dumpT / tune.dumpHold)})`;
+  for (const b of $('replies').children) b.disabled = !s.call || s.shredHold > 0 || scene !== 'play';
+}
+// effects live on the pad and leave by themselves
+function fxAt(el, x, y, ms) { el.style.left = x + 'px'; el.style.top = y + 'px'; $('board').appendChild(el); setTimeout(() => el.remove(), ms); }
+function fxStamp(text, tone = '') {
+  document.querySelectorAll('#board .stamp').forEach(x => x.remove());
+  const el = document.createElement('div'); el.className = 'fx stamp ' + tone; el.textContent = text;
+  const b = $('board').getBoundingClientRect(), wide = b.width > 700;
+  fxAt(el, (wide ? b.width * 0.24 : b.width * 0.18) + (Math.random() - 0.5) * 40, (wide ? b.height * 0.3 : b.height * 0.08) + (Math.random() - 0.5) * 30, 850);
+}
+function fxFloat(text, bad, nearPrice) {
+  const el = document.createElement('div'); el.className = 'fx float' + (bad ? ' bad' : ''); el.textContent = text;
+  const b = $('board').getBoundingClientRect();
+  fxAt(el, nearPrice ? Math.max(60, b.width * (b.width > 700 ? 0.42 : 0.6)) : 64, nearPrice ? 40 : b.height * (b.width > 700 ? 0.62 : 0.2), 950);
+}
+function shake() { if (matchMedia('(prefers-reduced-motion: reduce)').matches) return; const b = $('board'); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); }
+
+// ---- Results and sharing ----------------------------------------------------------------
+function shareUrl() {
+  const u = new URL(SITE), s = state;
+  if (current.mode === 'daily') u.searchParams.set('d', current.day); else u.searchParams.set('seed', current.seed);
+  u.searchParams.set('beat', String(s.score)); u.searchParams.set('by', nameOrDefault());
+  if (lang === 'en') u.searchParams.set('lang', 'en');
+  return u.toString();
+}
+function shareText() {
+  const s = state, e = s.end, pts = s.history.slice(0, e.histLen), n = 10, blocks = [];
+  for (let i = 0; i < n; i++) { const a = pts[Math.floor(i * (pts.length - 1) / n)], b = pts[Math.floor((i + 1) * (pts.length - 1) / n)]; blocks.push(b >= a ? '🟩' : '🟥'); }
+  const endMark = { dump: '💸', raid: '🚨', halt: '🪦' }[e.kind] + ' ' + S[lang].shareEnd[e.kind];
+  return [current.mode === 'daily' ? T('shareHead', { n: current.day }) : T('shareFree'), '$' + s.co[2] + ' ' + blocks.join('') + ' ' + endMark,
+    (e.kind === 'dump' ? T('take_') : T('onPaper')) + ': ' + fmtMoney(e.kind === 'dump' ? e.payout : e.paper), T('shareLies', { n: s.lies }), shareUrl()].join('\n');
+}
+async function copy(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) {
+    const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e2) { ok = false; } ta.remove(); return ok;
+  }
+}
+let toastTimer;
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 2200); }
+async function shareImage() {
+  const blob = await new Promise(res => paper.toBlob(res, 'image/png'));
+  if (!blob) return;
+  const file = new File([blob], 'pump-and-dump-87-' + state.co[2].toLowerCase() + '.png', { type: 'image/png' });
+  const text = shareText();
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], text }); return; } catch (e) { if (e.name === 'AbortError') return; }
+  }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  await copy(text); toast(T('saved'));
+}
+async function dare() {
+  const url = shareUrl(), text = T('challenge', { by: nameOrDefault(), ticker: '$' + state.co[2], v: fmtMoney(state.score) });
+  if (navigator.share && matchMedia('(pointer: coarse)').matches) { try { await navigator.share({ text, url }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  if (await copy(text + '\n' + url)) toast(T('dareCopied'));
+}
+async function paintResults() {
+  applyWords();
+  try { await document.fonts.load('700 40px Antonio'); await document.fonts.load('400 40px Antonio'); } catch (e) { /* fall back to the system face */ }
+  const e = state.end; drawPaper(paper);
+  const [head] = headlineFor(e);
+  paper.setAttribute('aria-label', head);
+  setText($('rTitle'), rankFor(e));
+  setText($('rBig'), (e.kind === 'dump' ? T('take_') : T('onPaper')) + ': ' + fmtMoney(e.kind === 'dump' ? e.payout : e.paper));
+  const vs = $('rVs');
+  if (challenge && challenge.run.seed === current.seed) { vs.hidden = false; vs.textContent = T(state.score > challenge.beat ? 'vsWin' : 'vsLose', { by: challenge.by, you: fmtMoney(state.score), them: fmtMoney(challenge.beat) }); }
+  else vs.hidden = true;
+}
+function paintFigures() {
+  const box = $('s-figures'); box.innerHTML = '';
+  ['greedy', 'cautious', 'narc', 'whale', 'mom'].forEach((k, i) => {
+    const f = document.createElement('figure'), c = document.createElement('canvas'); c.width = c.height = 400;
+    const cap = document.createElement('figcaption'); cap.textContent = T('figNames')[k];
+    f.append(c, cap); box.appendChild(f); drawFace(c, k, 1234 + i * 99);
+  });
+}
+
+// ---- Wiring ---------------------------------------------------------------------------
+$('startBtn').addEventListener('click', () => { readName(); start(challenge ? challenge.run : current); });
+$('freeBtn').addEventListener('click', () => { readName(); start(runFor(0, 1 + Math.floor(Math.random() * 2e9))); }); // a new seed is the one place Math.random picks
+$('freeBtn2').addEventListener('click', () => start(runFor(0, 1 + Math.floor(Math.random() * 2e9))));
+$('againBtn').addEventListener('click', () => start(current));
+$('shareBtn').addEventListener('click', shareImage);
+$('copyBtn').addEventListener('click', async () => { if (await copy(shareText())) toast(T('copied')); });
+$('dareBtn').addEventListener('click', dare);
+$('langBtn').addEventListener('click', () => { lang = lang === 'de' ? 'en' : 'de'; store.set('lang', lang); paintTitle(); });
+for (const id of ['muteBtn', 'muteBtnT']) $(id).addEventListener('click', () => { startAudio(); setMuted(!muted); });
+$('pauseBtn').addEventListener('click', () => { if (scene === 'play') setScene('pause'); });
+$('resumeBtn').addEventListener('click', () => { if (scene === 'pause') setScene('play'); });
+for (const b of $('replies').children) b.addEventListener('click', () => answer(Number(b.dataset.i)));
+for (const [id, key] of [['shredBtn', 'shred'], ['dumpBtn', 'dump']]) {
+  const b = $(id);
+  b.addEventListener('pointerdown', ev => { ev.preventDefault(); b.setPointerCapture(ev.pointerId); ui[key] = true; });
+  for (const t of ['pointerup', 'pointercancel', 'lostpointercapture']) b.addEventListener(t, () => { ui[key] = false; });
+  b.addEventListener('contextmenu', ev => ev.preventDefault());
+}
+
+// ---- Loop: fixed step, frame time clamped ---------------------------------------------
+function step() {
+  if (pressed('KeyM')) { setMuted(!muted); hit.delete('KeyM'); }
+  scenes[scene].update(STEP); hit.clear();
+}
+let last, acc = 0;
+function tick() {
+  const now = clock.now();
+  acc += Math.min(now - last, 0.25); last = now;
+  while (acc >= STEP) { step(); acc -= STEP; }
+  drawFrame();
+}
+function drawFrame() { if (scene === 'play' || scene === 'pause' || scene === 'ending') { drawChart(); paintHud(); } }
+function frame() { tick(); requestAnimationFrame(frame); }
+function timer() { if (document.visibilityState === 'visible' && clock.now() - last > 0.1) tick(); }
+
+// ---- What a check can read and drive (?manual=1 stops the loop; players never see it) ----
+window.game = {
+  get scene() { return scene; },
+  get state() { return state; },
+  press(code) { hit.add(code); },
+  hold(code, on) { on ? down.add(code) : down.delete(code); },
+  get events() { return events; },
+  step(n = 1, draw = true) { for (let i = 0; i < n; i++) step(); if (draw) drawFrame(); },
+};
+
+reset();
+const first = params.get('scene');
+if (first === 'play') start(current); else setScene(first && scenes[first] ? first : 'title');
+last = clock.now();
+if (params.get('manual') === '1') drawFrame();
+else { requestAnimationFrame(frame); setInterval(timer, 50); }
+</script>
+</body>
+</html>
